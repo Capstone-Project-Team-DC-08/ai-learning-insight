@@ -6,7 +6,8 @@ const routes = [
     method: "GET",
     path: "/student/profile",
     options: {
-      auth: "jwt", // GEMBOK: Hanya user login yang bisa akses
+      auth: "jwt",
+      cors: true, // GEMBOK: Hanya user login yang bisa akses
       description: "Get logged in user profile",
       handler: StudentHandler.getProfile,
     },
@@ -96,6 +97,20 @@ const routes = [
       handler: StudentHandler.submitAssignment,
     },
   },
+  {
+    method: "PUT",
+    path: '/users/profile',
+    options: {
+      auth: 'jwt', // Asumsi kamu menggunakan strategi auth 'jwt'
+      validate: {
+        payload: Joi.object({
+          name: Joi.string().min(3).max(50).required(),
+          city: Joi.string().min(2).max(100).required(),
+        })
+      }
+    },
+    handler: StudentHandler.updateProfile,
+  }
 ];
 
 module.exports = routes;

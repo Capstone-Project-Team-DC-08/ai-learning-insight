@@ -103,6 +103,16 @@ const StudentHandler = {
       })
       .code(201);
   },
+
+  async updateProfile(request, h) {
+    const userId = request.auth.credentials.id;
+    const profileData = request.payload;
+    const updatedProfile = await ProfileService.updateProfile(
+      userId,
+      profileData
+    );
+    return h.response({ status: "success", data: updatedProfile }).code(200);
+  }
 };
 
 module.exports = StudentHandler;

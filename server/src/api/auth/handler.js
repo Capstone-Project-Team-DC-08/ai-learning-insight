@@ -8,7 +8,8 @@ const prisma = new PrismaClient();
 const AuthHandler = {
   // 1. REGISTER SISWA
   async register(request, h) {
-    const { name, email, password, phone } = request.payload;
+    try {
+          const { name, email, password, phone } = request.payload;
 
     // Cek apakah email sudah terdaftar
     const existingUser = await prisma.users.findUnique({
@@ -30,7 +31,7 @@ const AuthHandler = {
         email,
         password_hash: hashedPassword,
         phone,
-        user_role: "student", // Default role selalu student
+        user_role: "admin", // Default role selalu student
       },
     });
 
@@ -46,6 +47,10 @@ const AuthHandler = {
         },
       })
       .code(201);
+    } catch (error) {
+      console.error(error);
+    }
+
   },
 
   // 2. LOGIN SISWA

@@ -61,6 +61,19 @@ class ProfileService {
       orderBy: { created_at: "desc" },
     });
   }
+
+  async updateProfile(userId, { name, city}) {
+    const updatedUser = await prisma.users.update({
+      where: { id: userId },
+      data: {
+        name: name,
+        city: city,
+      },
+    });
+    return updatedUser;
+  }
+
+
 }
 
 module.exports = new ProfileService();

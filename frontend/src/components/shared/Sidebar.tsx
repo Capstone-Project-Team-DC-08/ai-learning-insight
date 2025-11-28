@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, Compass, BookOpen, LogOut, User } from "lucide-react";
+import { LayoutDashboard, Compass, BookOpen, LogOut, User, Settings } from "lucide-react";
 import { deleteCookie } from "cookies-next";
 
 import { Button } from "@/components/ui/button";
@@ -25,6 +25,12 @@ const routes = [
     icon: User,
     href: "/student/profile",
   },
+    {
+    label: "Pengaturan",
+    icon: Settings,
+    href: "/student/settings",
+  },
+  
 ];
 
 export default function Sidebar() {
@@ -96,7 +102,7 @@ export default function Sidebar() {
         <Button
           variant="ghost"
           onClick={onLogout}
-          className="flex w-full justify-start gap-2 px-2.5 py-2.5 text-sm text-destructive hover:bg-destructive/10 hover:text-destructive"
+          className="flex w-full justify-center gap-2 px-2.5 py-2.5 text-sm text-destructive hover:bg-destructive/10 hover:text-destructive"
         >
           <LogOut className="mr-2 h-4 w-4" />
           Keluar

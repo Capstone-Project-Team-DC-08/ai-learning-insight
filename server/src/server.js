@@ -14,7 +14,10 @@ const init = async () => {
     host: process.env.HOST || "localhost",
     routes: {
       cors: {
-        origin: ["*"], // Mengizinkan Frontend (Next.js) mengakses Backend ini
+        origin: ["http://localhost:3000"], // Mengizinkan Frontend (Next.js) mengakses Backend ini
+        credentials: true,
+        headers: ['Content-Type', 'Authorization'],
+        additionalHeaders: ['Authorization']
       },
     },
   });
