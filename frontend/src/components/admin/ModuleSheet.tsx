@@ -33,7 +33,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2, Video, FileText, Code, HelpCircle } from "lucide-react";
 import api from "@/lib/axios";
 import { toast } from "sonner";
-import RichTextEditor from "./RichTextEditor"; // <--- Import Editor yang baru dibuat
+import QuizBuilder from "./QuizBuilder";
 import dynamic from "next/dynamic";
 const BlockEditor = dynamic(() => import("./BlockNoteEditor"), { ssr: false });
 
@@ -160,18 +160,10 @@ export default function ModuleSheet({
         return (
           <FormItem>
             <FormLabel>Konfigurasi Quiz (JSON)</FormLabel>
-            <FormControl>
-              <Textarea
-                {...field}
-                rows={10}
-                className="font-mono text-xs"
-                placeholder='[{"question": "...", "options": [...]}]'
-              />
-            </FormControl>
-            <FormDescription>
-              Saat ini quiz menggunakan format JSON manual. (Fitur Quiz Builder
-              akan datang).
-            </FormDescription>
+            <QuizBuilder
+              initialContent={field.value} // Pass string JSON dari form
+              onChange={field.onChange} // Update form saat quiz berubah
+            />
           </FormItem>
         );
 
