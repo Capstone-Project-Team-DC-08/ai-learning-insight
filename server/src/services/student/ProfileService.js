@@ -1,6 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const Boom = require("@hapi/boom");
+const bcrypt = require("bcrypt");
 
 class ProfileService {
   // Ambil Profil User
@@ -73,6 +74,38 @@ class ProfileService {
     return updatedUser;
   }
 
+   async changePassword(userId, currentPassword, newPassword) {
+    // 1. Cari user di database untuk mengambil password_hash saat ini
+    const user = await prisma.users.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw Boom.notFound('User tidak ditemukan');
+    }
+
+    // 2. Verifikasi Password Lama
+    // Bandingkan password yang dikirim user dengan hash di database
+    const isMatch = await bcrypt.compare(currentPassword, user.password_hash);
+
+    if (!isMatch) {
+      // Jika tidak cocok, lempar error 400
+      throw Boom.badRequest('Password lama yang Anda masukkan salah');
+    }
+
+    // 3. Hash Password Baru
+    const saltRounds = 10;
+    const newPasswordHash = await bcrypt.hash(newPassword, saltRounds);
+
+    // 4. Update Database
+    await prisma.users.update({
+      where: { id: userId },
+      data: {
+        password_hash: newPasswordHash,
+        updated_at: new Date(), // Opsional: update timestamp
+      },
+    });
+  }
 
 }
 

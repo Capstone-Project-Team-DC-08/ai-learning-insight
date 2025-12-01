@@ -7,6 +7,7 @@ import { Separator } from '@/components/ui/separator'
 // Import komponen pecahan
 import { SettingsSidebar } from './components/SettingsSidebar'
 import { ProfileContent } from './components/ProfileContent'
+import AccountContent from './components/AccountContent'
 
 
 const SettingPages = () => {
@@ -33,11 +34,7 @@ const SettingPages = () => {
           {activeTab === "profile" && <ProfileContent />}
 
           {/* Fallback untuk tab Account yang belum ada isinya */}
-          {activeTab === "account" && (
-             <div className="flex items-center justify-center h-40 text-slate-400">
-                Account Settings Coming Soon
-             </div>
-          )}
+          {activeTab === "account" && <AccountContent />}
         </main>
         
       </div>

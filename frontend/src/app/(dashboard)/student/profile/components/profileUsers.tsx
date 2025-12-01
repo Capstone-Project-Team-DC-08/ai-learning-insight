@@ -2,12 +2,13 @@
 
 import React, { useEffect, useState } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { FaLocationDot, FaPencil } from "react-icons/fa6";
+import { FaLocationDot} from "react-icons/fa6";
 import { Badge } from '@/components/ui/badge';
 
 type User = {
     name: string;
     city?: string;
+    image_path?: string | null;
 };
 
 const ProfileUsersPage = () => {
@@ -37,19 +38,10 @@ const ProfileUsersPage = () => {
                 transition-all duration-300 ease-in-out
             ">
                 <div className="relative shrink-0">
-                    <Avatar className="w-24 h-24 md:w-32 md:h-32 shadow-xl shadow-slate-200/50 ring-4 ring-white">
-                        <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                    <Avatar className="w-24 h-24 md:w-32 md:h-32 shadow-xl shadow-slate-200/50 ring-4 ring-white ">
+                        <AvatarImage src={user?.image_path || `https://github.com/shadcn.png`} alt="@shadcn" className="object-cover w-full h-full" />
                         <AvatarFallback className="bg-slate-100 text-slate-500">CN</AvatarFallback>
                     </Avatar>
-                    <button className='
-                        absolute -right-2 bottom-0 
-                        bg-white text-slate-600 
-                       shadow-md border border-slate-100
-                        rounded-full p-2.5 
-                        flex items-center justify-center
-                    '>
-                        <FaPencil className="text-[12px]" />
-                    </button>
                 </div>
                 <div className="flex flex-col gap-3 items-center md:items-start w-full mt-2">
                     <div className="flex flex-col md:flex-row items-center gap-3">

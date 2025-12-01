@@ -112,7 +112,27 @@ const StudentHandler = {
       profileData
     );
     return h.response({ status: "success", data: updatedProfile }).code(200);
+  },
+
+  async changePassword(request, h) {
+    // 1. Ambil ID user dari token JWT
+    const userId = request.auth.credentials.id;
+
+    // 2. Ambil data dari body request
+    const { currentPassword, newPassword } = request.payload;
+
+    // 3. Panggil Service
+    await ProfileService.changePassword(userId, currentPassword, newPassword);
+
+    // 4. Return response sukses
+    const response = h.response({
+      status: 'success',
+      message: 'Password berhasil diperbarui',
+    });
+    response.code(200);
+    return response;
   }
+
 };
 
 module.exports = StudentHandler;

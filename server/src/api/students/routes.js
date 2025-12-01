@@ -72,7 +72,6 @@ const routes = [
       handler: StudentHandler.completeModule,
     },
   },
-
   {
     method: "POST",
     // Struktur URL yang jelas hierarkinya
@@ -101,16 +100,58 @@ const routes = [
     method: "PUT",
     path: '/users/profile',
     options: {
-      auth: 'jwt', // Asumsi kamu menggunakan strategi auth 'jwt'
+      auth: 'jwt',
+      payload: {
+        parse: true,
+        allow: 'multipart/form-data',
+        multipart: true,
+        maxBytes: 2 * 1024 * 1024, // 2MB Limit
+        output: 'stream', // Penting agar file image terbaca sebagai stream
+      },
       validate: {
+        // Tambahkan opsi ini agar Joi memberi tahu field mana yang salah
+        options: { abortEarly: false },
+        failAction: async (request, h, err) => {
+          // Log error ke console server untuk debugging
+          console.error("Validation Error:", err.message);
+
+          // Kirim detail error ke frontend (bukan hanya "Invalid payload")
+          throw err;
+        },
         payload: Joi.object({
           name: Joi.string().min(3).max(50).required(),
-          city: Joi.string().min(2).max(100).required(),
+          city: Joi.string().min(2).max(100).optional().allow(null, ''),
+          image: Joi.any().optional(), // Handle file stream
         })
-      }
+      },
     },
     handler: StudentHandler.updateProfile,
-  }
+  }, {
+    method: 'PUT',
+    path: '/users/change-password',
+    options: {
+      auth: 'jwt', // Pastikan user login menggunakan strategi JWT
+      description: 'Mengubah password user',
+      tags: ['api', 'users'],
+      validate: {
+        payload: Joi.object({
+          currentPassword: Joi.string().required().label('Password Lama'),
+          newPassword: Joi.string().min(8).required().label('Password Baru'),
+        }),
+        // failAction penting agar frontend menerima pesan error validasi spesifik
+        // (misal: "Password baru minimal 6 karakter")
+        failAction: async (request, h, err) => {
+          if (process.env.NODE_ENV === 'production') {
+            // Di production, bisa disembunyikan jika perlu, tapi untuk dev biarkan throw
+            throw err;
+          }
+          console.error('Validation error:', err.message);
+          throw err;
+        },
+      },
+    },
+    handler: StudentHandler.changePassword, // Memanggil fungsi di StudentHandler
+  },
 ];
 
 module.exports = routes;
