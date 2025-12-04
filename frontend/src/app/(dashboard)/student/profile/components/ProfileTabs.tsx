@@ -1,31 +1,26 @@
-
 "use client"
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Button } from '@/components/ui/button';
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export const ProfileTabs = () => {
     const pathname = usePathname();
-    
-
-    const isActive = (path: string) => pathname === path;
 
     return (
-        <nav className="flex gap-2 border-b border-slate-100 pb-2">
-            <Button 
-                variant={isActive('/student/profile') ? 'secondary' : 'outline'} 
-                asChild
-            >
-                <Link href="/student/profile">Focus Time</Link>
-            </Button>
-            
-            <Button 
-                variant={isActive('/student/profile/weekly-activity') ? 'secondary' : 'outline'} 
-                asChild
-            >
-                <Link href="/student/profile/weekly-activity">Weekly Activity</Link>
-            </Button>
-        </nav>
+        <Tabs defaultValue={pathname} className="w-full">
+            <TabsList className="grid w-full grid-cols-2 lg:w-[400px]">
+                <TabsTrigger value="/student/profile" asChild>
+                    <Link href="/student/profile">
+                        Focus Time
+                    </Link>
+                </TabsTrigger>
+                <TabsTrigger value="/student/profile/weekly-activity" asChild>
+                    <Link href="/student/profile/weekly-activity">
+                        Weekly Activity
+                    </Link>
+                </TabsTrigger>
+            </TabsList>
+        </Tabs>
     )
 }
