@@ -2,8 +2,27 @@
 const ProfileService = require("../../services/student/ProfileService");
 const CourseService = require("../../services/course/CourseService");
 const LearningService = require("../../services/learning/LearningService");
+const InsightService = require("../../services/student/InsightService");
+const DashboardService = require("../../services/student/DashboardService");
 
 const StudentHandler = {
+  // === DASHBOARD GROUP ===
+  async getDashboardStats(request, h) {
+    try {
+      const userId = request.auth.credentials.id;
+      const stats = await DashboardService.getDashboardStats(userId);
+      return h.response({ status: "success", data: stats });
+    } catch (error) {
+      console.error(error);
+    }
+  },
+
+  async getMyCoursesDetailed(request, h) {
+    const userId = request.auth.credentials.id;
+    const courses = await DashboardService.getMyCoursesDetailed(userId);
+    return h.response({ status: "success", data: courses });
+  },
+
   // === PROFILE GROUP ===
   async getProfile(request, h) {
     const userId = request.auth.credentials.id;
@@ -126,13 +145,54 @@ const StudentHandler = {
 
     // 4. Return response sukses
     const response = h.response({
-      status: 'success',
-      message: 'Password berhasil diperbarui',
+      status: "success",
+      message: "Password berhasil diperbarui",
     });
     response.code(200);
     return response;
-  }
+  },
 
+  async generateInsight(request, h) {
+    const userId = request.auth.credentials.id;
+
+    // Proses ini mungkin agak lama (tunggu ML + Gemini),
+    // jadi frontend harus tampilkan loading state yang bagus.
+    const result = await InsightService.generateFullInsight(userId);
+
+    return h.response({
+      status: "success",
+      message: "Analisis AI selesai",
+      data: result,
+    });
+  },
+
+  async getInsight(request, h) {
+    const userId = request.auth.credentials.id;
+    const result = await InsightService.getLatestInsight(userId);
+
+    if (!result) {
+      return h.response({
+        status: "success",
+        data: null,
+        message: "Belum ada data analisis. Silakan generate.",
+      });
+    }
+
+    return h.response({
+      status: "success",
+      data: result,
+    });
+  },
+
+  async getFocusTime(request, h) {
+    const userId = request.auth.credentials.id;
+    const result = await InsightService.getFocusTimeDistribution(userId);
+
+    return h.response({
+      status: "success",
+      data: result,
+    });
+  },
 };
 
 module.exports = StudentHandler;

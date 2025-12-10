@@ -1,31 +1,69 @@
-import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
+"use client";
 
-const data = [
-  { name: "Pagi", value: 45 },
-  { name: "Siang", value: 25 },
-  { name: "Sore", value: 20 },
-  { name: "Malam", value: 10 }
-];
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28"];
+type FocusTimeData = {
+  name: string;
+  value: number;
+  count: number;
+};
 
-export default function FokusTimePage() {
+type FocusTimeChartProps = {
+  data: FocusTimeData[];
+};
+
+const COLORS = ["#475569", "#64748b", "#94a3b8", "#cbd5e1", "#e2e8f0"];
+
+export default function FocusTimeChart({ data }: FocusTimeChartProps) {
+  if (!data || data.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-[220px] text-slate-400 text-sm">
+        Belum ada data aktivitas
+      </div>
+    );
+  }
+
   return (
-    <PieChart width={300} height={250}>
-      <Pie
-        data={data}
-        cx="50%"
-        cy="50%"
-        outerRadius={80}
-        dataKey="value"
-        label
-      >
-        {data.map((entry, index) => (
-          <Cell key={`cell-${index}`} fill={COLORS[index]} />
-        ))}
-      </Pie>
-      <Tooltip />
-      <Legend />
-    </PieChart>
+    <ResponsiveContainer width="100%" height={220}>
+      <PieChart>
+        <Pie
+          data={data}
+          cx="50%"
+          cy="50%"
+          innerRadius={50}
+          outerRadius={80}
+          paddingAngle={2}
+          dataKey="value"
+        >
+          {data.map((entry, index) => (
+            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+          ))}
+        </Pie>
+        <Tooltip
+          contentStyle={{
+            backgroundColor: "#fff",
+            border: "1px solid #e2e8f0",
+            borderRadius: "8px",
+            fontSize: "12px",
+          }}
+          formatter={(value: number, name: string, props: any) => [
+            `${value}% (${props.payload.count} aktivitas)`,
+            name,
+          ]}
+        />
+        <Legend
+          iconType="circle"
+          iconSize={8}
+          wrapperStyle={{ fontSize: "12px" }}
+        />
+      </PieChart>
+    </ResponsiveContainer>
   );
 }

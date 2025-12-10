@@ -16,6 +16,11 @@ const routes = [
     href: "/student/dashboard",
   },
   {
+    label: "Kelas Saya",
+    icon: BookOpen,
+    href: "/student/my-courses",
+  },
+  {
     label: "Jelajah Kelas",
     icon: Compass,
     href: "/courses",
@@ -25,12 +30,11 @@ const routes = [
     icon: User,
     href: "/student/profile",
   },
-    {
+  {
     label: "Pengaturan",
     icon: Settings,
     href: "/student/settings",
   },
-  
 ];
 
 export default function Sidebar() {

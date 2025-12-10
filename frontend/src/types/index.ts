@@ -13,6 +13,7 @@ export interface Course {
   description?: string;
   image_path?: string;
   point: number;
+  image: string;
   difficulty: "beginner" | "intermediate" | "advanced";
   status?: "draft" | "published";
   // Field khusus dashboard siswa
@@ -72,4 +73,80 @@ export interface CompletionResponse {
   course_progress: number;
   course_status: string;
   next_tutorial_id: number | null;
+}
+
+export interface AIInsight {
+  generated_at: string;
+  persona: {
+    cluster_id: number;
+    persona_label: string;
+    confidence: number;
+    characteristics: string[];
+  };
+  pace: {
+    pace_label: string;
+    pace_percentage: number;
+    insight: string;
+    journey_name?: string;
+  };
+  advice: {
+    advice_text: string;
+    user_id: number;
+  };
+}
+
+// Dashboard Stats
+export interface DashboardStats {
+  stats: {
+    total_courses: number;
+    completed_courses: number;
+    in_progress_courses: number;
+    total_study_hours: number;
+    avg_quiz_score: number;
+  };
+  active_courses: {
+    id: number;
+    name: string;
+    image_path: string | null;
+    difficulty: string;
+    progress: number;
+    last_activity: string;
+  }[];
+  recent_activities: {
+    id: number;
+    type: string;
+    title: string;
+    course_id: number;
+    course_name: string;
+    status: string;
+    last_viewed: string;
+  }[];
+}
+
+// My Courses Detailed
+export interface MyCoursesDetailed {
+  all: CourseEnrollment[];
+  in_progress: CourseEnrollment[];
+  completed: CourseEnrollment[];
+  not_started: CourseEnrollment[];
+  summary: {
+    total: number;
+    in_progress: number;
+    completed: number;
+    not_started: number;
+  };
+}
+
+export interface CourseEnrollment {
+  id: number;
+  name: string;
+  summary: string;
+  image_path: string | null;
+  point: number;
+  difficulty: string;
+  total_modules: number;
+  progress: number;
+  status: string;
+  enrolled_at: string;
+  last_activity: string;
 }

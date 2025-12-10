@@ -3,161 +3,514 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { PlayCircle, CheckCircle } from "lucide-react";
+import {
+  PlayCircle,
+  BookOpen,
+  Clock,
+  Trophy,
+  TrendingUp,
+  Sparkles,
+  ChevronRight,
+  Zap,
+  RefreshCw,
+  Target,
+  Calendar,
+  BarChart3,
+} from "lucide-react";
+import { toast } from "sonner";
 
 import api from "@/lib/axios";
-import { Course } from "@/types";
+import { Course, AIInsight } from "@/types";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import EmptyState from "@/components/EmptyState";
-import DashboardSkeleton from "@/components/DashboardSkeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type User = {
   name: string;
 };
 
+type DashboardData = {
+  stats: {
+    total_courses: number;
+    completed_courses: number;
+    in_progress_courses: number;
+    total_study_hours: number;
+    avg_quiz_score: number;
+  };
+  recent_courses: Course[];
+  recent_activities: {
+    id: number;
+    type: string;
+    title: string;
+    course_name: string;
+    timestamp: string;
+  }[];
+};
+
 export default function StudentDashboard() {
   const [user, setUser] = useState<User | null>(null);
   const [courses, setCourses] = useState<Course[]>([]);
+  const [insight, setInsight] = useState<AIInsight | null>(null);
   const [loading, setLoading] = useState(true);
+  const [insightLoading, setInsightLoading] = useState(true);
+  const [generating, setGenerating] = useState(false);
 
   useEffect(() => {
-    // Ambil User dari LocalStorage
     if (typeof window !== "undefined") {
       const storedUser = localStorage.getItem("user");
       if (storedUser) setUser(JSON.parse(storedUser));
     }
 
-    // Ambil Data Kelas dari API
-    const fetchCourses = async () => {
+    const fetchData = async () => {
       try {
-        const response = await api.get("/student/my-courses");
-        setCourses(response.data.data);
+        const [coursesRes, insightRes] = await Promise.allSettled([
+          api.get("/student/my-courses"),
+          api.get("/student/insights"),
+        ]);
+
+        if (coursesRes.status === "fulfilled") {
+          setCourses(coursesRes.value.data.data);
+        }
+
+        if (insightRes.status === "fulfilled" && insightRes.value.data.data) {
+          setInsight(insightRes.value.data.data);
+        }
       } catch (error) {
-        console.error("Gagal mengambil data kelas", error);
+        console.error("Error fetching data", error);
       } finally {
         setLoading(false);
+        setInsightLoading(false);
       }
     };
 
-    fetchCourses();
+    fetchData();
   }, []);
+
+  const handleGenerateInsight = async () => {
+    setGenerating(true);
+    try {
+      const res = await api.post("/student/insights/generate");
+      setInsight(res.data.data);
+      toast.success("Analisis Selesai!", {
+        description: "AI telah memperbarui profil belajar Anda.",
+      });
+    } catch (error: any) {
+      toast.error("Gagal Menganalisis", {
+        description: error.response?.data?.message || "Terjadi kesalahan.",
+      });
+    } finally {
+      setGenerating(false);
+    }
+  };
+
+  // Calculate stats from courses
+  const stats = {
+    total: courses.length,
+    completed: courses.filter((c) => (c.progress || 0) === 100).length,
+    inProgress: courses.filter(
+      (c) => (c.progress || 0) > 0 && (c.progress || 0) < 100
+    ).length,
+  };
+
+  const recentCourses = courses
+    .filter((c) => (c.progress || 0) > 0 && (c.progress || 0) < 100)
+    .slice(0, 3);
 
   if (loading) {
     return <DashboardSkeleton />;
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header Section */}
+    <div className="space-y-8">
+      {/* Welcome Section */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-1">
-          <h2 className="text-2xl font-semibold tracking-tight">
-            Dashboard Siswa
-          </h2>
-          <p className="text-sm text-muted-foreground">
-            Selamat datang kembali,{" "}
-            <span className="font-medium text-foreground">
-              {user?.name || "Siswa"}
-            </span>
-            . Lanjutkan pembelajaranmu hari ini.
+          <h1 className="text-2xl font-semibold tracking-tight">
+            Selamat datang kembali, {user?.name || "Learner"}! 👋
+          </h1>
+          <p className="text-muted-foreground">
+            Pantau progress belajarmu dan temukan insight personal dari AI.
           </p>
         </div>
-        <Link href="/courses">
-          <Button size="sm" className="rounded-full">
-            Jelajah Kelas Baru
-          </Button>
-        </Link>
+        <div className="flex gap-2">
+          <Link href="/student/my-courses">
+            <Button variant="outline" size="sm">
+              <BookOpen className="mr-2 h-4 w-4" />
+              Kelas Saya
+            </Button>
+          </Link>
+          <Link href="/courses">
+            <Button size="sm">
+              Jelajah Kelas
+              <ChevronRight className="ml-1 h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
       </div>
 
-      {/* Courses Grid */}
-      {courses.length === 0 ? (
-        <EmptyState />
-      ) : (
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {courses.map((course) => {
-            const progress = Math.min(Math.max(course.progress || 0, 0), 100);
+      {/* Stats Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <Card className="border border-slate-200 shadow-sm bg-white">
+          <CardContent className="p-5">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-slate-500 font-medium">
+                  Total Kelas
+                </p>
+                <p className="text-2xl font-semibold text-slate-900 mt-1">
+                  {stats.total}
+                </p>
+              </div>
+              <div className="h-10 w-10 rounded-lg bg-slate-100 flex items-center justify-center">
+                <BookOpen className="h-5 w-5 text-slate-500" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
-            return (
-              <Card
-                key={course.id}
-                className="flex h-full flex-col overflow-hidden border border-border/60 bg-card/60 transition-all hover:-translate-y-0.5 hover:shadow-md"
-              >
-                {/* Gambar Kelas */}
-                <div className="relative h-40 w-full bg-muted">
-                  {course.image_path ? (
-                    <Image
-                      src={course.image_path}
-                      alt={course.name}
-                      fill
-                      className="object-cover"
-                    />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center text-xs text-muted-foreground">
-                      Tidak ada gambar
+        <Card className="border border-slate-200 shadow-sm bg-white">
+          <CardContent className="p-5">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-slate-500 font-medium">
+                  Sedang Dipelajari
+                </p>
+                <p className="text-2xl font-semibold text-slate-900 mt-1">
+                  {stats.inProgress}
+                </p>
+              </div>
+              <div className="h-10 w-10 rounded-lg bg-slate-100 flex items-center justify-center">
+                <Target className="h-5 w-5 text-slate-500" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="border border-slate-200 shadow-sm bg-white">
+          <CardContent className="p-5">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-slate-500 font-medium">
+                  Kelas Selesai
+                </p>
+                <p className="text-2xl font-semibold text-slate-900 mt-1">
+                  {stats.completed}
+                </p>
+              </div>
+              <div className="h-10 w-10 rounded-lg bg-slate-100 flex items-center justify-center">
+                <Trophy className="h-5 w-5 text-slate-500" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="border border-slate-200 shadow-sm bg-white">
+          <CardContent className="p-5">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-slate-500 font-medium">
+                  Completion Rate
+                </p>
+                <p className="text-2xl font-semibold text-slate-900 mt-1">
+                  {stats.total > 0
+                    ? Math.round((stats.completed / stats.total) * 100)
+                    : 0}
+                  %
+                </p>
+              </div>
+              <div className="h-10 w-10 rounded-lg bg-slate-100 flex items-center justify-center">
+                <BarChart3 className="h-5 w-5 text-slate-500" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Main Content Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* AI Insight Card - Takes 2 columns */}
+        <div className="lg:col-span-2">
+          {insightLoading ? (
+            <Skeleton className="h-[280px] rounded-xl" />
+          ) : insight ? (
+            <Card className="border border-slate-200 shadow-sm bg-white h-full">
+              <CardHeader className="pb-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="h-8 w-8 rounded-lg bg-slate-100 flex items-center justify-center">
+                      <Sparkles className="h-4 w-4 text-slate-600" />
                     </div>
-                  )}
-                </div>
-
-                <CardHeader className="space-y-2 pb-3">
-                  <CardTitle className="line-clamp-1 text-base font-semibold">
-                    {course.name}
-                  </CardTitle>
-                  <div className="flex items-center gap-2 text-xs">
-                    <Badge
-                      variant="outline"
-                      className="text-[11px] px-2 py-0.5"
-                    >
-                      {course.difficulty || "Umum"}
-                    </Badge>
-                  </div>
-                </CardHeader>
-
-                <CardContent className="flex-1 space-y-3 pb-3">
-                  <div className="space-y-1">
-                    <div className="flex items-center justify-between text-xs text-muted-foreground">
-                      <span>Progress</span>
-                      <span className="font-medium text-foreground">
-                        {Math.round(progress)}%
-                      </span>
+                    <div>
+                      <CardTitle className="text-base font-semibold text-slate-900">
+                        Profil Belajar
+                      </CardTitle>
+                      <p className="text-xs text-slate-500">
+                        Hasil analisis AI
+                      </p>
                     </div>
-                    <Progress value={progress} className="h-2" />
                   </div>
-                </CardContent>
-
-                <CardFooter className="pt-3">
-                  <Link href={`/courses/${course.id}`} className="w-full">
+                  <Link href="/student/profile">
                     <Button
-                      className="w-full"
-                      variant={progress === 100 ? "outline" : "default"}
+                      variant="ghost"
+                      size="sm"
+                      className="text-slate-500 hover:text-slate-900"
                     >
-                      {progress === 100 ? (
-                        <>
-                          <CheckCircle className="mr-2 h-4 w-4 text-emerald-500" />
-                          Selesai
-                        </>
-                      ) : (
-                        <>
-                          <PlayCircle className="mr-2 h-4 w-4" />
-                          Lanjut Belajar
-                        </>
-                      )}
+                      Detail
+                      <ChevronRight className="ml-1 h-4 w-4" />
                     </Button>
                   </Link>
-                </CardFooter>
-              </Card>
-            );
-          })}
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {/* Dual Display - Persona & Pace */}
+                <div className="grid grid-cols-2 gap-4">
+                  {/* Persona */}
+                  <div className="bg-slate-50 rounded-xl p-4">
+                    <p className="text-xs text-slate-400 uppercase tracking-wider">
+                      Persona
+                    </p>
+                    <p className="text-base font-semibold text-slate-900 mt-1 capitalize">
+                      {insight.persona?.persona_label || "The Consistent"}
+                    </p>
+                    <p className="text-xs text-slate-500 mt-1 line-clamp-2">
+                      {insight.persona?.characteristics?.[0] ||
+                        "Pola belajar yang konsisten"}
+                    </p>
+                  </div>
+
+                  {/* Pace */}
+                  <div className="bg-slate-50 rounded-xl p-4">
+                    <p className="text-xs text-slate-400 uppercase tracking-wider">
+                      Pace
+                    </p>
+                    <p className="text-base font-semibold text-slate-900 mt-1 capitalize">
+                      {insight.pace?.pace_label || "Consistent Learner"}
+                    </p>
+                    <p className="text-xs text-slate-500 mt-1 line-clamp-2">
+                      {insight.pace?.insight?.slice(0, 60) ||
+                        "Belajar dengan ritme konsisten"}
+                      ...
+                    </p>
+                  </div>
+                </div>
+
+                {/* Advice */}
+                {insight.advice?.advice_text && (
+                  <div className="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                    <p className="text-xs text-slate-400 uppercase tracking-wider mb-1">
+                      Rekomendasi
+                    </p>
+                    <p className="text-sm text-slate-600 line-clamp-2">
+                      {insight.advice.advice_text.slice(0, 120)}
+                      {insight.advice.advice_text.length > 120 ? "..." : ""}
+                    </p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          ) : (
+            <Card className="border-2 border-dashed border-slate-200 bg-slate-50/50 h-full">
+              <CardContent className="p-8 text-center flex flex-col items-center justify-center h-full">
+                <div className="w-14 h-14 rounded-xl bg-slate-100 flex items-center justify-center mx-auto mb-4">
+                  <Sparkles className="w-7 h-7 text-slate-400" />
+                </div>
+                <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                  Temukan Profil Belajarmu
+                </h3>
+                <p className="text-slate-500 text-sm mb-6 max-w-sm mx-auto">
+                  AI akan menganalisis pola belajar dan memberikan insight
+                  personal.
+                </p>
+                <Button
+                  onClick={handleGenerateInsight}
+                  disabled={generating}
+                  className="bg-slate-900 hover:bg-slate-800"
+                >
+                  {generating ? (
+                    <>
+                      <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                      Menganalisis...
+                    </>
+                  ) : (
+                    <>
+                      <Zap className="mr-2 h-4 w-4" />
+                      Mulai Analisis
+                    </>
+                  )}
+                </Button>
+              </CardContent>
+            </Card>
+          )}
         </div>
-      )}
+
+        {/* Continue Learning Card */}
+        <div className="lg:col-span-1">
+          <Card className="h-full">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-base font-semibold">
+                  Lanjutkan Belajar
+                </CardTitle>
+                <Link href="/student/my-courses">
+                  <Button variant="ghost" size="sm" className="text-xs">
+                    Lihat Semua
+                  </Button>
+                </Link>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {recentCourses.length === 0 ? (
+                <div className="text-center py-8">
+                  <BookOpen className="h-10 w-10 text-muted-foreground/40 mx-auto mb-3" />
+                  <p className="text-sm text-muted-foreground">
+                    Belum ada kelas yang sedang dipelajari
+                  </p>
+                  <Link href="/courses" className="mt-3 block">
+                    <Button variant="outline" size="sm">
+                      Mulai Belajar
+                    </Button>
+                  </Link>
+                </div>
+              ) : (
+                recentCourses.map((course) => (
+                  <Link
+                    key={course.id}
+                    href={`/courses/${course.id}`}
+                    className="block"
+                  >
+                    <div className="flex gap-3 p-3 rounded-xl hover:bg-muted/50 transition-colors group">
+                      <div className="relative h-14 w-14 rounded-lg bg-muted overflow-hidden shrink-0">
+                        {course.image_path ? (
+                          <Image
+                            src={course.image_path}
+                            alt={course.name}
+                            fill
+                            className="object-cover"
+                          />
+                        ) : (
+                          <div className="flex items-center justify-center h-full">
+                            <BookOpen className="h-5 w-5 text-muted-foreground" />
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-sm line-clamp-1 group-hover:text-primary transition-colors">
+                          {course.name}
+                        </p>
+                        <div className="flex items-center gap-2 mt-1.5">
+                          <Progress
+                            value={course.progress || 0}
+                            className="h-1.5 flex-1"
+                          />
+                          <span className="text-xs text-muted-foreground font-medium">
+                            {Math.round(course.progress || 0)}%
+                          </span>
+                        </div>
+                      </div>
+                      <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-primary shrink-0 self-center" />
+                    </div>
+                  </Link>
+                ))
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <Link href="/student/profile" className="block">
+          <Card className="hover:bg-slate-50 transition-colors cursor-pointer border border-slate-200">
+            <CardContent className="p-4 flex items-center gap-3">
+              <div className="h-9 w-9 rounded-lg bg-slate-100 flex items-center justify-center">
+                <Sparkles className="h-4 w-4 text-slate-500" />
+              </div>
+              <div>
+                <p className="font-medium text-sm text-slate-900">Profil Belajar</p>
+                <p className="text-xs text-slate-500">Lihat insight AI</p>
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
+
+        <Link href="/student/my-courses" className="block">
+          <Card className="hover:bg-slate-50 transition-colors cursor-pointer border border-slate-200">
+            <CardContent className="p-4 flex items-center gap-3">
+              <div className="h-9 w-9 rounded-lg bg-slate-100 flex items-center justify-center">
+                <BookOpen className="h-4 w-4 text-slate-500" />
+              </div>
+              <div>
+                <p className="font-medium text-sm text-slate-900">Kelas Saya</p>
+                <p className="text-xs text-slate-500">Lihat semua kelas</p>
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
+
+        <Link href="/courses" className="block">
+          <Card className="hover:bg-slate-50 transition-colors cursor-pointer border border-slate-200">
+            <CardContent className="p-4 flex items-center gap-3">
+              <div className="h-9 w-9 rounded-lg bg-slate-100 flex items-center justify-center">
+                <TrendingUp className="h-4 w-4 text-slate-500" />
+              </div>
+              <div>
+                <p className="font-medium text-sm text-slate-900">Katalog</p>
+                <p className="text-xs text-slate-500">Jelajah kelas baru</p>
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
+
+        <Link href="/student/settings" className="block">
+          <Card className="hover:bg-slate-50 transition-colors cursor-pointer border border-slate-200">
+            <CardContent className="p-4 flex items-center gap-3">
+              <div className="h-9 w-9 rounded-lg bg-slate-100 flex items-center justify-center">
+                <Calendar className="h-4 w-4 text-slate-500" />
+              </div>
+              <div>
+                <p className="font-medium text-sm text-slate-900">Pengaturan</p>
+                <p className="text-xs text-slate-500">Kelola akun</p>
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+function DashboardSkeleton() {
+  return (
+    <div className="space-y-8">
+      <div className="flex justify-between items-center">
+        <div className="space-y-2">
+          <Skeleton className="h-8 w-72" />
+          <Skeleton className="h-4 w-96" />
+        </div>
+        <div className="flex gap-2">
+          <Skeleton className="h-9 w-28" />
+          <Skeleton className="h-9 w-28" />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {[...Array(4)].map((_, i) => (
+          <Skeleton key={i} className="h-24 rounded-xl" />
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <Skeleton className="lg:col-span-2 h-[320px] rounded-2xl" />
+        <Skeleton className="h-[320px] rounded-xl" />
+      </div>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {[...Array(4)].map((_, i) => (
+          <Skeleton key={i} className="h-20 rounded-xl" />
+        ))}
+      </div>
     </div>
   );
 }

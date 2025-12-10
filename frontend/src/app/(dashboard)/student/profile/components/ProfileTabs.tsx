@@ -1,26 +1,49 @@
-"use client"
+"use client";
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Clock, Activity } from "lucide-react";
 
 export const ProfileTabs = () => {
-    const pathname = usePathname();
+  const pathname = usePathname();
 
-    return (
-        <Tabs defaultValue={pathname} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 lg:w-[400px]">
-                <TabsTrigger value="/student/profile" asChild>
-                    <Link href="/student/profile">
-                        Focus Time
-                    </Link>
-                </TabsTrigger>
-                <TabsTrigger value="/student/profile/weekly-activity" asChild>
-                    <Link href="/student/profile/weekly-activity">
-                        Weekly Activity
-                    </Link>
-                </TabsTrigger>
-            </TabsList>
-        </Tabs>
-    )
-}
+  const tabs = [
+    {
+      label: "Focus Time",
+      href: "/student/profile",
+      icon: Clock,
+    },
+    {
+      label: "Weekly Activity",
+      href: "/student/profile/weekly-activity",
+      icon: Activity,
+    },
+  ];
+
+  return (
+    <div className="flex gap-1 p-1 bg-slate-100 rounded-lg w-fit mb-6">
+      {tabs.map((tab) => {
+        const isActive = pathname === tab.href;
+        const Icon = tab.icon;
+
+        return (
+          <Link
+            key={tab.href}
+            href={tab.href}
+            className={`
+              flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all
+              ${
+                isActive
+                  ? "bg-white text-slate-900 shadow-sm"
+                  : "text-slate-500 hover:text-slate-700"
+              }
+            `}
+          >
+            <Icon className="h-4 w-4" />
+            {tab.label}
+          </Link>
+        );
+      })}
+    </div>
+  );
+};

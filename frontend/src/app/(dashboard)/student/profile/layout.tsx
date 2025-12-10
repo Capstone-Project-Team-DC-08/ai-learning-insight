@@ -1,27 +1,19 @@
-"use client"
+"use client";
 
-import React from 'react'
-import ProfileUsersPage from './components/profileUsers';
-import { ProfileTabs } from './components/ProfileTabs';
+import React from "react";
+import ProfileUsersPage from "./components/profileUsers";
 
-
-const layout = ({
-    children,
+const ProfileLayout = ({
+  children,
 }: Readonly<{
-    children: React.ReactNode;
+  children: React.ReactNode;
 }>) => {
-    return (
-        <section>     
-            <ProfileUsersPage />
-            <section>
-                <section className=' flex gap-3'>
-                    <ProfileTabs />
-                </section>
-                {children}
-            </section>
+  return (
+    <div className="max-w-5xl mx-auto pb-12">
+      <ProfileUsersPage />
+      {children}
+    </div>
+  );
+};
 
-        </section>
-    )
-}
-
-export default layout
+export default ProfileLayout;

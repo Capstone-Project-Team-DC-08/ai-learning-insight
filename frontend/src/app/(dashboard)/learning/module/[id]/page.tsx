@@ -551,7 +551,10 @@ export default function LearningPlayerPage() {
     <div className="max-w-4xl mx-auto pb-20">
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
-        <Button variant="ghost" onClick={() => router.back()}>
+        <Button
+          variant="ghost"
+          onClick={() => router.push(`/courses/${module.developer_journey_id}`)}
+        >
           &larr; Kembali
         </Button>
         <Badge variant="outline" className="uppercase">
@@ -566,25 +569,6 @@ export default function LearningPlayerPage() {
 
       {/* Footer */}
       <div className="mt-10 flex justify-end border-t pt-6 space-x-3">
-        {/* refresh button to reload module */}
-        <Button
-          variant="ghost"
-          onClick={async () => {
-            try {
-              setLoading(true);
-              const res = await api.get(`/learning/module/${module.id}`);
-              setModule(res.data.data);
-              toast.success("Terbaru");
-            } catch {
-              toast.error("Gagal refresh");
-            } finally {
-              setLoading(false);
-            }
-          }}
-        >
-          <RefreshCcw className="w-4 h-4 mr-2" /> Refresh
-        </Button>
-
         {renderFooterButton()}
       </div>
     </div>
