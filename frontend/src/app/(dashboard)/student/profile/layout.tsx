@@ -9,7 +9,7 @@ const ProfileLayout = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <div className="max-w-5xl mx-auto pb-12">
+    <div className="pb-12">
       <ProfileUsersPage />
       {children}
     </div>

@@ -93,6 +93,34 @@ const routes = [
       handler: StudentHandler.completeModule,
     },
   },
+
+  // Quiz/Exam Routes
+  {
+    method: "POST",
+    path: "/learning/quiz/{id}/start",
+    options: {
+      auth: "jwt",
+      description: "Mulai quiz dan buat exam registration",
+      handler: StudentHandler.startQuiz,
+    },
+  },
+  {
+    method: "POST",
+    path: "/learning/quiz/{id}/submit",
+    options: {
+      auth: "jwt",
+      description: "Submit jawaban quiz dan simpan ke exam result",
+      validate: {
+        payload: Joi.object({
+          answers: Joi.object().optional(),
+          score: Joi.number().required(),
+          total_questions: Joi.number().integer().required(),
+          is_passed: Joi.boolean().required(),
+        }),
+      },
+      handler: StudentHandler.submitQuiz,
+    },
+  },
   {
     method: "POST",
     // Struktur URL yang jelas hierarkinya

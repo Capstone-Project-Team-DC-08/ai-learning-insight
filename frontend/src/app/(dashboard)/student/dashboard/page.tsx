@@ -18,6 +18,7 @@ import {
   BarChart3,
 } from "lucide-react";
 import { toast } from "sonner";
+import ReactMarkdown from "react-markdown";
 
 import api from "@/lib/axios";
 import { Course, AIInsight } from "@/types";
@@ -302,10 +303,9 @@ export default function StudentDashboard() {
                     <p className="text-xs text-slate-400 uppercase tracking-wider mb-1">
                       Rekomendasi
                     </p>
-                    <p className="text-sm text-slate-600 line-clamp-2">
-                      {insight.advice.advice_text.slice(0, 120)}
-                      {insight.advice.advice_text.length > 120 ? "..." : ""}
-                    </p>
+                    <ReactMarkdown >
+                      {`${insight.advice.advice_text.slice(0, 120)}...`}
+                    </ReactMarkdown>
                   </div>
                 )}
               </CardContent>
@@ -428,7 +428,9 @@ export default function StudentDashboard() {
                 <Sparkles className="h-4 w-4 text-slate-500" />
               </div>
               <div>
-                <p className="font-medium text-sm text-slate-900">Profil Belajar</p>
+                <p className="font-medium text-sm text-slate-900">
+                  Profil Belajar
+                </p>
                 <p className="text-xs text-slate-500">Lihat insight AI</p>
               </div>
             </CardContent>

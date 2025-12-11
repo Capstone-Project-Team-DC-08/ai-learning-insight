@@ -68,14 +68,19 @@ class InsightService {
 
   async prepareFeatures(userId) {
     // Ambil data mentah dari DB (Paralel)
-    const [trackings, quizResults, submissions, enrollments] =
+    const [trackings, examResults, submissions, enrollments] =
       await Promise.all([
         prisma.developer_journey_trackings.findMany({
           where: { developer_id: userId },
           select: { last_viewed: true, first_opened_at: true },
         }),
-        prisma.quiz_results.findMany({
-          where: { user_id: userId },
+        // Ambil score dari exam_results melalui exam_registrations
+        prisma.exam_results.findMany({
+          where: {
+            exam_registration: {
+              examinees_id: userId,
+            },
+          },
           select: { score: true },
         }),
         prisma.developer_journey_submissions.findMany({
@@ -102,7 +107,7 @@ class InsightService {
     const study_consistency_std = this.calculateCircularStdHour(studyHours);
 
     // --- 2. Avg Exam Score ---
-    const scores = quizResults.map((q) => parseFloat(q.score));
+    const scores = examResults.map((e) => parseFloat(e.score));
     const avg_exam_score = this.calculateMean(scores);
 
     // --- 3. Submission Fail Rate ---

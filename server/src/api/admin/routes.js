@@ -69,7 +69,7 @@ const routes = [
           title: Joi.string(),
           type: Joi.string().valid("article", "video", "quiz", "submission"),
           content: Joi.string(),
-          position: Joi.number().integer(), // Admin bisa reorder manual
+          position: Joi.number().integer(),
           status: Joi.string().valid("draft", "published"),
         }),
       },

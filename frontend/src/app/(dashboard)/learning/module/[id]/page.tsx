@@ -53,6 +53,8 @@ export default function LearningPlayerPage() {
     score: number;
     passed: boolean;
   } | null>(null);
+  const [quizStarted, setQuizStarted] = useState(false);
+  const [quizLoading, setQuizLoading] = useState(false);
 
   // Submission form
   const [submissionLink, setSubmissionLink] = useState("");
@@ -111,7 +113,27 @@ export default function LearningPlayerPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.id]);
 
-  console.log(module);
+  // ===== START QUIZ =====
+  const handleStartQuiz = async () => {
+    if (!module) return;
+    setQuizLoading(true);
+    try {
+      const res = await api.post(`/learning/quiz/${module.id}/start`);
+      const data = res.data.data;
+
+      if (data.already_completed && data.result?.is_passed) {
+        setQuizResult({ score: data.result.score, passed: true });
+        setQuizStarted(true);
+      } else {
+        setQuizStarted(true);
+      }
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Gagal memulai quiz");
+    } finally {
+      setQuizLoading(false);
+    }
+  };
+
   // ===== QUIZ SUBMIT =====
   const handleQuizSubmit = async () => {
     if (!module?.content) return;
@@ -130,14 +152,29 @@ export default function LearningPlayerPage() {
 
     const score = (correctCount / questions.length) * 100;
     const passed = score >= 70;
-    setQuizResult({ score, passed });
 
-    if (passed) {
-      toast.success(`Lulus! Skor: ${Math.round(score)}`);
-      // call complete endpoint same as article/video
-      await handleAction();
-    } else {
-      toast.error(`Belum lulus. Skor: ${Math.round(score)} — Coba lagi.`);
+    setQuizLoading(true);
+    try {
+      const res = await api.post(`/learning/quiz/${module.id}/submit`, {
+        answers: quizAnswers,
+        score,
+        total_questions: questions.length,
+        is_passed: passed,
+      });
+
+      setQuizResult({ score, passed });
+
+      if (passed) {
+        toast.success(`Lulus! Skor: ${Math.round(score)}`);
+        // Update module status
+        setModule({ ...module, current_status: "finished" });
+      } else {
+        toast.error(`Belum lulus. Skor: ${Math.round(score)} — Coba lagi.`);
+      }
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Gagal submit quiz");
+    } finally {
+      setQuizLoading(false);
     }
   };
 
@@ -232,21 +269,88 @@ export default function LearningPlayerPage() {
         return <div className="text-red-500">Error parsing quiz data</div>;
       }
 
-      if (quizResult?.passed) {
+      // Already passed
+      if (quizResult?.passed || module.current_status === "finished") {
         return (
           <Card className="p-10 text-center bg-green-50 border-green-200">
             <CheckCircle className="w-16 h-16 mx-auto text-green-600 mb-4" />
             <h3 className="text-2xl font-bold text-green-800">Quiz Lulus!</h3>
             <p className="text-green-700">
-              Skor Anda: {Math.round(quizResult.score)}
+              Skor Anda: {Math.round(quizResult?.score || 100)}
             </p>
             <p className="text-sm text-slate-500 mt-4">
               Modul telah ditandai selesai.
             </p>
+            <div className="mt-6">
+              {module.next_tutorial_id ? (
+                <Button
+                  size="lg"
+                  onClick={() =>
+                    router.push(`/learning/module/${module.next_tutorial_id}`)
+                  }
+                >
+                  Materi Selanjutnya <ChevronRight className="ml-2 w-4 h-4" />
+                </Button>
+              ) : (
+                <Button
+                  size="lg"
+                  variant="outline"
+                  onClick={() =>
+                    router.push(`/courses/${module.developer_journey_id}`)
+                  }
+                >
+                  Kembali ke Kelas
+                </Button>
+              )}
+            </div>
           </Card>
         );
       }
 
+      // Not started yet - Show start button
+      if (!quizStarted) {
+        return (
+          <Card className="p-10 max-w-2xl mx-auto mt-4 text-center border-slate-200">
+            <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-blue-100 flex items-center justify-center">
+              <PlayCircle className="w-10 h-10 text-blue-600" />
+            </div>
+            <Badge variant="outline" className="mb-3">
+              Quiz
+            </Badge>
+            <h3 className="text-2xl font-bold text-slate-900 mb-2">
+              {module.title}
+            </h3>
+            <p className="text-slate-500 mb-2">
+              Uji pemahaman Anda dengan menjawab {questions.length} pertanyaan
+            </p>
+            <div className="flex justify-center gap-4 text-sm text-slate-500 mb-6">
+              <span className="flex items-center gap-1">
+                <Clock className="w-4 h-4" />
+                {questions.length * 2} menit
+              </span>
+              <span className="flex items-center gap-1">
+                <AlertCircle className="w-4 h-4" />
+                KKM: 70
+              </span>
+            </div>
+            <Button
+              size="lg"
+              onClick={handleStartQuiz}
+              disabled={quizLoading}
+              className="px-8"
+            >
+              {quizLoading ? (
+                <Loader2 className="animate-spin mr-2" />
+              ) : (
+                <PlayCircle className="mr-2 w-5 h-5" />
+              )}
+              Mulai Quiz
+            </Button>
+          </Card>
+        );
+      }
+
+      // Quiz in progress
       return (
         <Card className="p-6 max-w-3xl mx-auto mt-4 border-slate-200">
           <div className="text-center mb-8">
@@ -298,12 +402,30 @@ export default function LearningPlayerPage() {
             ))}
           </div>
 
+          {/* Show retry message if failed */}
+          {quizResult && !quizResult.passed && (
+            <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg text-center">
+              <p className="text-red-700 font-medium">
+                Skor: {Math.round(quizResult.score)} - Belum mencapai KKM
+              </p>
+              <p className="text-red-600 text-sm mt-1">
+                Silakan coba lagi dengan menjawab ulang
+              </p>
+            </div>
+          )}
+
           <div className="mt-8 flex justify-end">
             <Button
               onClick={handleQuizSubmit}
               size="lg"
-              disabled={Object.keys(quizAnswers).length < questions.length}
+              disabled={
+                quizLoading ||
+                Object.keys(quizAnswers).length < questions.length
+              }
             >
+              {quizLoading ? (
+                <Loader2 className="animate-spin mr-2" />
+              ) : null}
               Cek Jawaban
             </Button>
           </div>
@@ -534,7 +656,12 @@ export default function LearningPlayerPage() {
       }
     }
 
-    // Standard material (article/video/quiz)
+    // Quiz - Don't show footer button, quiz handles its own completion
+    if (module.type === "quiz") {
+      return null;
+    }
+
+    // Standard material (article/video only)
     return (
       <Button size="lg" onClick={handleAction} disabled={actionLoading}>
         {actionLoading ? (

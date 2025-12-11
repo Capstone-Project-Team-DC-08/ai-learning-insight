@@ -87,13 +87,46 @@ const StudentHandler = {
 
   async completeModule(request, h) {
     const userId = request.auth.credentials.id;
-    const tutorialId = parseInt(request.params.id); // ID Modul dari URL
+    const tutorialId = parseInt(request.params.id);
 
     const result = await LearningService.completeModule(userId, tutorialId);
 
     return h.response({
       status: "success",
       message: "Modul selesai",
+      data: result,
+    });
+  },
+
+  // Quiz Handlers
+  async startQuiz(request, h) {
+    const userId = request.auth.credentials.id;
+    const tutorialId = parseInt(request.params.id);
+
+    const result = await LearningService.startQuiz(userId, tutorialId);
+
+    return h.response({
+      status: "success",
+      message: "Quiz dimulai",
+      data: result,
+    });
+  },
+
+  async submitQuiz(request, h) {
+    const userId = request.auth.credentials.id;
+    const tutorialId = parseInt(request.params.id);
+    const { answers, score, total_questions, is_passed } = request.payload;
+
+    const result = await LearningService.submitQuiz(userId, tutorialId, {
+      answers,
+      score,
+      total_questions,
+      is_passed,
+    });
+
+    return h.response({
+      status: "success",
+      message: is_passed ? "Quiz Lulus!" : "Quiz selesai",
       data: result,
     });
   },

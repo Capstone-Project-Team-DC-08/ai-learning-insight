@@ -1,4 +1,3 @@
-// Database yang digunakan: PostgreSQL (rekomendasi untuk proyek skala enterprise)
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -9,17 +8,13 @@ generator client {
   binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
-// ====================================================================
-// 1. Core Users and Authentication
-// ====================================================================
-
+//user table
 model users {
   id                                  Int @id @default(autoincrement())
   display_name                        String?
   name                                String?
   email                               String   @unique // Email harus unik untuk login
   phone                               String?
-  // Kolom wajib untuk otentikasi: Menyimpan hash dari password
   password_hash                       String?
   user_role                           String   @default("student") // Role: "student" atau "admin"
   user_verification_status            String?
@@ -29,7 +24,6 @@ model users {
   custom_city                         String?
   tz                                  String?
   verified_at                         DateTime?
-  // ... kolom user lainnya
 
   created_at                          DateTime @default(now())
   updated_at                          DateTime @updatedAt
@@ -37,7 +31,6 @@ model users {
   remember_token                      String?
 
   // Relasi
-  // Pengajar/Reviewer yang mungkin adalah user
   instructed_journeys                 developer_journeys[]       @relation("Instructor")
   reviewed_journeys                   developer_journeys[]       @relation("Reviewer")
 
@@ -58,10 +51,7 @@ model users {
   enrollments enrollments[]
 }
 
-// ====================================================================
-// 2. Journey & Tutorial Structures
-// ====================================================================
-
+// journey and toturial table
 model developer_journeys {
   id                                  Int @id @default(autoincrement())
   name                                String
@@ -75,7 +65,7 @@ model developer_journeys {
   listed                              Boolean @default(true)
   hours_to_study                      Int?
 
-  // Relasi FK ke users (opsional/nullable sesuai permintaan)
+  // Relasi FK ke users 
   instructor_id                       Int?
   reviewer_id                         Int?
 
@@ -99,7 +89,7 @@ model developer_journey_tutorials {
   id                                  Int @id @default(autoincrement())
   developer_journey_id                Int
   title                               String
-  type                                String // misal: article, quiz, submission
+  type                                String // misal: article, quiz, submission, exam
   content                             String? // Isi materi (HTML/Markdown/ID Quiz/etc)
   requirements                        Json? // JSON string atau ID dari tutorial yang harus selesai
   position                            Int
@@ -121,10 +111,8 @@ model developer_journey_tutorials {
   @@map("developer_journey_tutorials")
 }
 
-// ====================================================================
-// 3. Tracking, Submission, & Completion (Data untuk Insight)
-// ====================================================================
 
+// tracking activities users
 model developer_journey_trackings {
   id                                  Int @id @default(autoincrement())
   journey_id                          Int
@@ -190,14 +178,9 @@ model developer_journey_completions {
   @@map("developer_journey_completions")
 }
 
-// ====================================================================
-// 4. Exam/Quiz Structures
-// ====================================================================
-
-// Tabel tambahan untuk menyimpan struktur pertanyaan Quiz
+// quiz and exam table
 model quiz_questions {
   id                                  Int @id @default(autoincrement())
-  // Jika quiz terpisah dari tutorial (terdapat banyak pertanyaan), FK ke tutorial
   tutorial_id                         Int // FK ke developer_journey_tutorials (type=quiz)
   question_text                       String
   question_type                       String // misal: multiple_choice, essay
@@ -212,7 +195,6 @@ model quiz_questions {
   @@map("quiz_questions")
 }
 
-// Tabel tambahan untuk pilihan jawaban Quiz
 model quiz_options {
   id                                  Int @id @default(autoincrement())
   question_id                         Int
@@ -228,17 +210,12 @@ model quiz_options {
   @@map("quiz_options")
 }
 
-// Tabel exam_registrations & exam_results akan digunakan untuk merekam aktivitas
-// pengerjaan quiz. Saya tambahkan relasi ke tabel yang baru.
-
 model exam_registrations {
   id                                  Int @id @default(autoincrement())
   exam_module_id                      Int?
   tutorial_id                         Int
   examinees_id                        Int
   status                              String // misal: registered, finished
-  
-  // ... kolom lainnya
   
   created_at                          DateTime @default(now())
   updated_at                          DateTime @updatedAt
@@ -257,8 +234,6 @@ model exam_results {
   total_questions                     Int
   score                               Float // Skor akhir
   is_passed                           Boolean
-  
-  // ... kolom lainnya
 
   created_at                          DateTime @default(now())
   updated_at                          DateTime @updatedAt
@@ -269,7 +244,6 @@ model exam_results {
   @@map("exam_results")
 }
 
-// Tabel untuk menyimpan hasil pengerjaan quiz per user
 model quiz_results {
   id                                  Int @id @default(autoincrement())
   user_id                             Int
@@ -307,7 +281,6 @@ model enrollments {
   status      String   @default("active") // active, completed, dropped
   enrolled_at DateTime @default(now())
   
-  // Opsional: Cache progress agar tidak perlu hitung manual setiap saat
   current_progress Float @default(0.0) 
   last_accessed_at DateTime?
 

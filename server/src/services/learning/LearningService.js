@@ -358,6 +358,251 @@ class LearningService {
       };
     });
   }
+
+  // ===== QUIZ/EXAM METHODS =====
+
+  // Start Quiz - Creates exam_registration
+  async startQuiz(userId, tutorialId) {
+    // 1. Validate tutorial exists and is quiz type
+    const tutorial = await prisma.developer_journey_tutorials.findUnique({
+      where: { id: tutorialId },
+    });
+
+    if (!tutorial) throw Boom.notFound("Modul tidak ditemukan");
+    if (tutorial.type !== "quiz")
+      throw Boom.badRequest("Modul ini bukan tipe quiz");
+
+    // 2. Check enrollment
+    const enrollment = await prisma.enrollments.findUnique({
+      where: {
+        user_id_journey_id: {
+          user_id: userId,
+          journey_id: tutorial.developer_journey_id,
+        },
+      },
+    });
+
+    if (!enrollment)
+      throw Boom.forbidden("Anda belum terdaftar di kelas ini");
+
+    // 3. Check if already has active registration
+    const existingReg = await prisma.exam_registrations.findFirst({
+      where: {
+        tutorial_id: tutorialId,
+        examinees_id: userId,
+      },
+      include: {
+        exam_results: true,
+      },
+    });
+
+    // If already has result, return existing data
+    if (existingReg?.exam_results) {
+      return {
+        registration_id: existingReg.id,
+        status: existingReg.status,
+        already_completed: true,
+        result: existingReg.exam_results,
+      };
+    }
+
+    // If has registration but no result, return existing
+    if (existingReg) {
+      return {
+        registration_id: existingReg.id,
+        status: existingReg.status,
+        already_completed: false,
+      };
+    }
+
+    // 4. Create new registration
+    const registration = await prisma.exam_registrations.create({
+      data: {
+        tutorial_id: tutorialId,
+        examinees_id: userId,
+        status: "registered",
+      },
+    });
+
+    return {
+      registration_id: registration.id,
+      status: registration.status,
+      already_completed: false,
+    };
+  }
+
+  // Submit Quiz - Creates exam_result
+  async submitQuiz(userId, tutorialId, { answers, score, total_questions, is_passed }) {
+    return await prisma.$transaction(async (tx) => {
+      // 1. Validate tutorial
+      const tutorial = await tx.developer_journey_tutorials.findUnique({
+        where: { id: tutorialId },
+      });
+
+      if (!tutorial) throw Boom.notFound("Modul tidak ditemukan");
+      if (tutorial.type !== "quiz")
+        throw Boom.badRequest("Modul ini bukan tipe quiz");
+
+      const journeyId = tutorial.developer_journey_id;
+
+      // 2. Get or create registration
+      let registration = await tx.exam_registrations.findFirst({
+        where: {
+          tutorial_id: tutorialId,
+          examinees_id: userId,
+        },
+      });
+
+      if (!registration) {
+        registration = await tx.exam_registrations.create({
+          data: {
+            tutorial_id: tutorialId,
+            examinees_id: userId,
+            status: "registered",
+          },
+        });
+      }
+
+      // 3. Check if already has result
+      const existingResult = await tx.exam_results.findUnique({
+        where: { exam_registration_id: registration.id },
+      });
+
+      let result;
+      if (existingResult) {
+        // Update existing result if new score is higher
+        if (score > existingResult.score) {
+          result = await tx.exam_results.update({
+            where: { id: existingResult.id },
+            data: {
+              score,
+              total_questions,
+              is_passed,
+            },
+          });
+        } else {
+          result = existingResult;
+        }
+      } else {
+        // Create new result
+        result = await tx.exam_results.create({
+          data: {
+            exam_registration_id: registration.id,
+            score,
+            total_questions,
+            is_passed,
+          },
+        });
+      }
+
+      // 4. Update registration status
+      await tx.exam_registrations.update({
+        where: { id: registration.id },
+        data: { status: "finished" },
+      });
+
+      // 5. If passed, mark module as finished
+      if (is_passed) {
+        await tx.developer_journey_trackings.upsert({
+          where: {
+            developer_id_tutorial_id: {
+              developer_id: userId,
+              tutorial_id: tutorialId,
+            },
+          },
+          create: {
+            developer_id: userId,
+            tutorial_id: tutorialId,
+            journey_id: journeyId,
+            status: "finished",
+            last_viewed: new Date(),
+          },
+          update: {
+            status: "finished",
+            last_viewed: new Date(),
+          },
+        });
+
+        // Update course progress
+        const totalModules = await tx.developer_journey_tutorials.count({
+          where: { developer_journey_id: journeyId, status: "published" },
+        });
+
+        const finishedModules = await tx.developer_journey_trackings.count({
+          where: {
+            developer_id: userId,
+            journey_id: journeyId,
+            status: "finished",
+          },
+        });
+
+        let progress = totalModules > 0 ? (finishedModules / totalModules) * 100 : 0;
+        if (progress > 100) progress = 100;
+
+        const enrollment = await tx.enrollments.findUnique({
+          where: {
+            user_id_journey_id: { user_id: userId, journey_id: journeyId },
+          },
+        });
+
+        if (enrollment) {
+          let newStatus = enrollment.status;
+          if (progress === 100 && newStatus !== "completed") {
+            newStatus = "completed";
+          }
+
+          await tx.enrollments.update({
+            where: { id: enrollment.id },
+            data: {
+              current_progress: progress,
+              status: newStatus,
+              last_accessed_at: new Date(),
+            },
+          });
+        }
+      }
+
+      // 6. Get next module
+      const nextModule = await tx.developer_journey_tutorials.findFirst({
+        where: {
+          developer_journey_id: journeyId,
+          position: { gt: tutorial.position },
+          status: "published",
+        },
+        orderBy: { position: "asc" },
+        select: { id: true },
+      });
+
+      return {
+        result,
+        is_passed,
+        score,
+        next_tutorial_id: nextModule?.id || null,
+      };
+    });
+  }
+
+  // Get quiz status for a user
+  async getQuizStatus(userId, tutorialId) {
+    const registration = await prisma.exam_registrations.findFirst({
+      where: {
+        tutorial_id: tutorialId,
+        examinees_id: userId,
+      },
+      include: {
+        exam_results: true,
+      },
+    });
+
+    if (!registration) {
+      return { status: "not_started", result: null };
+    }
+
+    return {
+      status: registration.status,
+      result: registration.exam_results || null,
+    };
+  }
 }
 
 module.exports = new LearningService();
