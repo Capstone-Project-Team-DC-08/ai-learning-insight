@@ -51,7 +51,7 @@ export default function QuizPlayer({ module, onComplete }: any) {
           Quiz
         </Badge>
         <h3 className="text-xl font-bold">Uji Pemahaman</h3>
-        <p className="text-slate-500">KKM: 70</p>
+        <p className="">KKM: 70</p>
       </div>
       <div className="space-y-8">
         {questions.map((q: any, idx: number) => (

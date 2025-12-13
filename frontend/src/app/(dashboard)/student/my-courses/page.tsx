@@ -111,7 +111,7 @@ export default function MyCoursesPage() {
             </div>
 
             {/* Title */}
-            <h3 className="font-semibold text-slate-900 line-clamp-2 mb-3  transition-colors">
+            <h3 className="font-semibold line-clamp-2 mb-3  transition-colors">
               {course.name}
             </h3>
 
@@ -128,7 +128,7 @@ export default function MyCoursesPage() {
                 isStarted && !isCompleted ? "" : "mt-auto"
               }`}
             >
-              <span className="text-sm font-medium  group-hover:text-slate-900 transition-colors">
+              <span className="text-sm font-medium   transition-colors">
                 {isCompleted
                   ? "Lihat Kelas"
                   : isStarted

@@ -8,7 +8,7 @@ import { Separator } from '@/components/ui/separator'
 import { SettingsSidebar } from './components/SettingsSidebar'
 import { ProfileContent } from './components/ProfileContent'
 import AccountContent from './components/AccountContent'
-import ThemeContent from './components/ThemeContent'
+
 
 
 const SettingPages = () => {
@@ -37,7 +37,7 @@ const SettingPages = () => {
           {/* Fallback untuk tab Account yang belum ada isinya */}
           {activeTab === "account" && <AccountContent />}
 
-          {activeTab === "theme" && <ThemeContent />}
+
         </main>
         
       </div>

@@ -101,6 +101,7 @@ export default function StudentDashboard() {
       toast.error("Gagal Menganalisis", {
         description: error.response?.data?.message || "Terjadi kesalahan.",
       });
+      console.log(error.message);
     } finally {
       setGenerating(false);
     }
@@ -131,7 +132,7 @@ export default function StudentDashboard() {
           <h1 className="text-2xl font-semibold tracking-tight">
             Selamat datang kembali, {user?.name || "Learner"}! 👋
           </h1>
-          <p className="text-muted-foreground">
+          <p className="">
             Pantau progress belajarmu dan temukan insight personal dari AI.
           </p>
         </div>
@@ -256,7 +257,7 @@ export default function StudentDashboard() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className=" hover:text-slate-900"
+                      className=" hover:text-slate-900 dark:text-slate-100"
                     >
                       Detail
                       <ChevronRight className="ml-1 h-4 w-4" />
@@ -269,7 +270,7 @@ export default function StudentDashboard() {
                 <div className="grid grid-cols-2 gap-4">
                   {/* Persona */}
                   <div className=" rounded-xl p-4">
-                    <p className="text-xs text-slate-400 uppercase tracking-wider">
+                    <p className="text-xs  uppercase tracking-wider">
                       Persona
                     </p>
                     <p className="text-base font-semibold  mt-1 capitalize">
@@ -282,7 +283,7 @@ export default function StudentDashboard() {
                   </div>
 
                   {/* Pace */}
-                  <div className="bg-slate-50 rounded-xl p-4">
+                  <div className=" rounded-xl p-4">
                     <p className="text-xs  uppercase tracking-wider">
                       Pace
                     </p>
@@ -347,7 +348,7 @@ export default function StudentDashboard() {
 
         {/* Continue Learning Card */}
         <div className="lg:col-span-1">
-          <Card className="h-full">
+          <Card className="h-full border-2 border-dashed border-slate-200 ">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-base font-semibold">
@@ -363,8 +364,8 @@ export default function StudentDashboard() {
             <CardContent className="space-y-3">
               {recentCourses.length === 0 ? (
                 <div className="text-center py-8">
-                  <BookOpen className="h-10 w-10 text-muted-foreground/40 mx-auto mb-3" />
-                  <p className="text-sm text-muted-foreground">
+                  <BookOpen className="h-10 w-10  mx-auto mb-3" />
+                  <p className="text-sm ">
                     Belum ada kelas yang sedang dipelajari
                   </p>
                   <Link href="/courses" className="mt-3 block">
@@ -391,7 +392,7 @@ export default function StudentDashboard() {
                           />
                         ) : (
                           <div className="flex items-center justify-center h-full">
-                            <BookOpen className="h-5 w-5 text-muted-foreground" />
+                            <BookOpen className="h-5 w-5 " />
                           </div>
                         )}
                       </div>
@@ -404,12 +405,12 @@ export default function StudentDashboard() {
                             value={course.progress || 0}
                             className="h-1.5 flex-1"
                           />
-                          <span className="text-xs text-muted-foreground font-medium">
+                          <span className="text-xs  font-medium">
                             {Math.round(course.progress || 0)}%
                           </span>
                         </div>
                       </div>
-                      <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-primary shrink-0 self-center" />
+                      <ChevronRight className="h-5 w-5  group-hover:text-primary shrink-0 self-center" />
                     </div>
                   </Link>
                 ))

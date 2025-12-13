@@ -17,6 +17,8 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
+import { ModeToggle } from "../ui/mode-toggle";
+import { useTheme } from "next-themes";
 
 const routes = [
   {
@@ -50,6 +52,7 @@ export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const [enrolling, setEnrolling] = useState(false);
+  const { theme } = useTheme();
 
   useEffect(() => {
     const token = getCookie("token");
@@ -75,9 +78,7 @@ export default function Sidebar() {
           <span className="text-sm font-semibold leading-none tracking-tight">
             LMS Code
           </span>
-          <span className="text-xs text-muted-foreground">
-            Ruang belajar kamu
-          </span>
+          <span className="text-xs ">Ruang belajar kamu</span>
         </div>
       </div>
 
@@ -104,7 +105,7 @@ export default function Sidebar() {
                     <route.icon
                       className={cn(
                         "mr-2 h-4 w-4",
-                        isActive ? "text-primary" : "text-muted-foreground"
+                        isActive ? "text-primary" : ""
                       )}
                     />
                     <span>{route.label}</span>
@@ -116,26 +117,36 @@ export default function Sidebar() {
         </nav>
       </ScrollArea>
 
-      {/* Logout */}
-      <div className="mt-4 border-t pt-4">
-        {!enrolling ? (
-          <>
-            <Button className="flex w-full justify-center gap-2 px-2.5 py-2.5 text-sm ">
-              <LogIn className="mr-2 h-4 w-4" />
-              <Link href={"/login"}>Masuk</Link>
-            </Button>
-          </>
+      {/* Footer */}
+      <div className="mt-4 space-y-3 border-t pt-4">
+        {/* Theme Toggle */}
+        <div className="flex items-center justify-between rounded-lg px-2.5 py-2 text-sm">
+          <span className="text-muted-foreground">
+            Mode {theme === "dark" ? "Gelap" : "Terang"}
+          </span>
+          <ModeToggle />
+        </div>
+
+        {/* Auth Button */}
+        {enrolling ? (
+          <Button
+            variant="ghost"
+            onClick={onLogout}
+            className="flex w-full justify-center gap-2 text-sm text-destructive hover:bg-destructive/10"
+          >
+            <LogOut className="h-4 w-4" />
+            Keluar
+          </Button>
         ) : (
-          <>
-            <Button
-              variant="ghost"
-              onClick={onLogout}
-              className="flex w-full justify-center gap-2 px-2.5 py-2.5 text-sm text-destructive hover:bg-destructive/10 hover:text-destructive"
+          <Button asChild className="w-full">
+            <Link
+              href="/login"
+              className="flex items-center justify-center gap-2"
             >
-              <LogOut className="mr-2 h-4 w-4" />
-              Keluar
-            </Button>
-          </>
+              <LogIn className="h-4 w-4" />
+              Masuk
+            </Link>
+          </Button>
         )}
       </div>
     </aside>

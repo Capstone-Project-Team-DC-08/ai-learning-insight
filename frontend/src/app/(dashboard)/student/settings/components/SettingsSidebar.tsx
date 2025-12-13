@@ -12,7 +12,6 @@ export const SettingsSidebar = ({ activeTab, setActiveTab }: SettingsSidebarProp
   const menuItems = [
     { id: "profile", label: "Profile", icon: <FaUser /> },
     { id: "account", label: "Account", icon: <FaLock /> },
-    { id: "theme", label: "Tema", icon: <Moon /> },
   ];
 
   return (
@@ -26,7 +25,7 @@ export const SettingsSidebar = ({ activeTab, setActiveTab }: SettingsSidebarProp
               flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap
               ${activeTab === item.id 
                 ? "bg-slate-100 text-slate-900" 
-                : "text-slate-500 hover:text-slate-900 hover:bg-slate-50"}
+                : " hover:text-slate-900 hover:bg-slate-50"}
             `}
           >
             <span className="text-lg">{item.icon}</span>

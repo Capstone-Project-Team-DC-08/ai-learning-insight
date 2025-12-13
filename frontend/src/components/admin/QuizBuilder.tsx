@@ -121,7 +121,7 @@ export default function QuizBuilder({ initialContent, onChange }: Props) {
             <div className="flex-1 space-y-4">
               {/* Input Pertanyaan */}
               <div>
-                <Label className="text-xs text-slate-500 mb-1.5 block">
+                <Label className="text-xs  mb-1.5 block">
                   Pertanyaan
                 </Label>
                 <Input
@@ -134,7 +134,7 @@ export default function QuizBuilder({ initialContent, onChange }: Props) {
 
               {/* List Opsi */}
               <div className="space-y-2">
-                <Label className="text-xs text-slate-500 block">
+                <Label className="text-xs  block">
                   Pilihan Jawaban (Klik lingkaran untuk set Kunci Jawaban)
                 </Label>
                 {q.options.map((opt, oIdx) => (

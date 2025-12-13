@@ -131,7 +131,7 @@ export default function AdminCoursesPage() {
           <h2 className="text-2xl font-semibold tracking-tight">
             Manajemen Kelas
           </h2>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm ">
             Buat, edit, dan kelola semua kelas yang tersedia di platform.
           </p>
         </div>
@@ -145,7 +145,7 @@ export default function AdminCoursesPage() {
                 placeholder="Cari kelas..."
                 className="pl-10 pr-3"
               />
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 " />
             </div>
           </div>
 
@@ -304,7 +304,7 @@ export default function AdminCoursesPage() {
                         >
                           {course.name}
                         </Link>
-                        <div className="mt-1 text-xs text-muted-foreground">
+                        <div className="mt-1 text-xs ">
                           {course.summary}
                         </div>
                       </TableCell>

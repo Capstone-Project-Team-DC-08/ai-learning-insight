@@ -103,7 +103,7 @@ export default function CourseDetailPage() {
 
   if (!course) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center text-sm text-muted-foreground">
+      <div className="flex min-h-[60vh] items-center justify-center text-sm ">
         Kelas tidak ditemukan.
       </div>
     );
@@ -114,7 +114,7 @@ export default function CourseDetailPage() {
     difficultyConfig[course.difficulty || ""] ??
     ({
       label: course.difficulty || "Semua level",
-      className: "border-slate-200 bg-slate-50 text-slate-700",
+      className: "border-slate-200 bg-slate-50",
     } as const);
 
   return (
@@ -133,7 +133,7 @@ export default function CourseDetailPage() {
               <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/70 to-transparent" />
             </>
           ) : (
-            <div className="flex h-full w-full items-center justify-center bg-muted text-sm text-muted-foreground">
+            <div className="flex h-full w-full items-center justify-center bg-muted text-sm ">
               Tidak ada gambar untuk kelas ini
             </div>
           )}
@@ -146,7 +146,7 @@ export default function CourseDetailPage() {
               >
                 {diff.label}
               </Badge>
-              <div className="inline-flex items-center gap-1 rounded-full bg-background/80 px-3 py-1 text-[11px] text-muted-foreground">
+              <div className="inline-flex items-center gap-1 rounded-full bg-background/80 px-3 py-1 text-[11px] ">
                 <Trophy className="h-3.5 w-3.5 text-amber-500" />
                 <span>{course.point} XP Points</span>
               </div>
@@ -156,7 +156,7 @@ export default function CourseDetailPage() {
               {course.name}
             </h1>
 
-            <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
+            <div className="flex flex-wrap items-center gap-4 text-xs ">
               <div className="inline-flex items-center gap-2">
                 <User className="h-4 w-4" />
                 <span>{course.instructor?.name || "LMS Team"}</span>
@@ -173,7 +173,7 @@ export default function CourseDetailPage() {
 
         {/* Action bar */}
         <div className="flex flex-col gap-6 border-t bg-background/80 px-6 py-5 md:flex-row md:items-center md:justify-between md:px-8">
-          <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground">
+          <p className="max-w-2xl text-sm leading-relaxed ">
             {course.description ||
               "Tidak ada deskripsi detail untuk kelas ini."}
           </p>
@@ -200,7 +200,7 @@ export default function CourseDetailPage() {
               )}
             </Button>
 
-            <p className="text-center text-[11px] text-muted-foreground">
+            <p className="text-center text-[11px] ">
               {course.is_enrolled
                 ? `Kamu sudah terdaftar. Progress saat ini: ${Math.round(
                     progress
@@ -221,7 +221,7 @@ export default function CourseDetailPage() {
               Materi Pembelajaran
             </h3>
           </div>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm ">
             Ikuti modul secara berurutan untuk mendapatkan hasil belajar yang
             maksimal.
           </p>
@@ -229,7 +229,7 @@ export default function CourseDetailPage() {
           <Card className="border border-border/70">
             <CardContent className="p-0">
               {course.developer_journey_tutorials.length === 0 ? (
-                <div className="flex items-center justify-center py-10 text-sm text-muted-foreground">
+                <div className="flex items-center justify-center py-10 text-sm ">
                   Belum ada materi yang diunggah.
                 </div>
               ) : (
@@ -237,7 +237,7 @@ export default function CourseDetailPage() {
                   {course.developer_journey_tutorials.map((tutorial, index) => {
                     // Tentukan Icon & Warna berdasarkan user_status
                     let icon = <Lock className="w-4 h-4" />;
-                    let circleClass = "bg-slate-100 text-slate-500";
+                    let circleClass = "bg-slate-100 ";
                     if (tutorial.user_status === "finished") {
                       icon = <CheckCircle className="w-4 h-4" />;
                       circleClass = "bg-emerald-100 text-emerald-700";
@@ -246,7 +246,7 @@ export default function CourseDetailPage() {
                       circleClass = "bg-yellow-100 text-yellow-700";
                     } else if (!tutorial.is_locked) {
                       icon = <PlayCircle className="w-4 h-4" />;
-                      circleClass = "bg-blue-100 text-blue-700";
+                      circleClass = "bg-blue-100 ";
                     }
 
                     const isLocked = !!tutorial.is_locked;
@@ -256,7 +256,7 @@ export default function CourseDetailPage() {
                       <div
                         className={`flex items-center justify-between px-4 py-3 text-sm transition-colors ${
                           isLocked
-                            ? "bg-muted/40 text-muted-foreground cursor-not-allowed"
+                            ? "bg-muted/40  cursor-not-allowed"
                             : "hover:bg-muted/40"
                         }`}
                         aria-disabled={isLocked}
@@ -273,7 +273,7 @@ export default function CourseDetailPage() {
                             <p className="line-clamp-1 font-medium text-foreground">
                               {tutorial.title}
                             </p>
-                            <p className="text-xs capitalize text-muted-foreground">
+                            <p className="text-xs capitalize ">
                               {tutorial.type}
                             </p>
                           </div>
@@ -296,7 +296,7 @@ export default function CourseDetailPage() {
                           )}
 
                           {isLocked ? (
-                            <Lock className="h-4 w-4 text-muted-foreground" />
+                            <Lock className="h-4 w-4 " />
                           ) : (
                             <PlayCircle className="h-4 w-4 text-primary" />
                           )}
@@ -345,24 +345,24 @@ export default function CourseDetailPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 text-sm">
-              <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">Instruktur</span>
+              <div className="flex items-center justify-between gap-5">
+                <span className="">Instruktur</span>
                 <span className="font-medium">
                   {course.instructor?.name || "LMS Team"}
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">Level</span>
+                <span className="">Level</span>
                 <span className="font-medium">{diff.label}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">Total Modul</span>
+                <span className="">Total Modul</span>
                 <span className="font-medium">
                   {course.developer_journey_tutorials.length} modul
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">XP yang didapat</span>
+                <span className="">XP yang didapat</span>
                 <span className="inline-flex items-center gap-1 font-medium">
                   <Trophy className="h-3.5 w-3.5 text-amber-500" />
                   {course.point} XP
@@ -371,11 +371,11 @@ export default function CourseDetailPage() {
 
               {course.is_enrolled && (
                 <div className="pt-3 space-y-2">
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs ">
                     Progres belajar kamu
                   </p>
                   <Progress value={progress} className="h-2" />
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs ">
                     Sudah selesai{" "}
                     <span className="font-medium">{Math.round(progress)}%</span>{" "}
                     dari materi.
@@ -386,7 +386,7 @@ export default function CourseDetailPage() {
           </Card>
 
           <Card className="border-dashed border-border/70 bg-muted/30">
-            <CardContent className="py-6 text-xs text-muted-foreground">
+            <CardContent className="py-6 text-xs ">
               Area ini bisa kamu gunakan nanti untuk:
               <ul className="mt-2 list-disc space-y-1 pl-4">
                 <li>Rekomendasi kelas serupa</li>

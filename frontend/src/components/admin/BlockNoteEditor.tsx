@@ -5,6 +5,7 @@ import { PartialBlock } from "@blocknote/core";
 import { useCreateBlockNote } from "@blocknote/react";
 import { BlockNoteView } from "@blocknote/mantine";
 import "@blocknote/mantine/style.css";
+import { useTheme } from "next-themes";
 
 /**
  * Improved BlockNote wrapper:
@@ -45,6 +46,14 @@ export default function BlockEditor({
 
   // Parse initial content only once
   const parsedInitialContent = useRef<PartialBlock[] | null>(null);
+
+  const { theme, systemTheme } = useTheme();
+const [mounted, setMounted] = useState(false);
+
+useEffect(() => setMounted(true), []);
+
+const resolvedTheme =
+  theme === "system" ? systemTheme : theme;
 
   useEffect(() => {
     if (!initialContent || parsedInitialContent.current !== null) return;
@@ -148,7 +157,7 @@ export default function BlockEditor({
 
   if (!editor) {
     return (
-      <div className="p-4 bg-slate-50 text-slate-600 rounded-lg">
+      <div className="p-4 rounded-lg">
         Loading editor…
       </div>
     );
@@ -156,14 +165,14 @@ export default function BlockEditor({
 
   return (
     <div
-      className={`border rounded-lg overflow-hidden bg-white ${
+      className={`border rounded-lg overflow-hidden ${
         editable ? "min-h-[300px]" : ""
       }`}
     >
       <BlockNoteView
         editor={editor}
         editable={editable}
-        theme={"light"}
+          theme={resolvedTheme === "dark" ? "dark" : "light"}
         onChange={handleChange}
         className="py-4"
       />

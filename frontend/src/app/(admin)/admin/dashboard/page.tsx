@@ -81,7 +81,7 @@ export default function AdminDashboard() {
         <h2 className="text-3xl font-bold tracking-tight">
           Dashboard Overview
         </h2>
-        <p className="text-slate-500">Ringkasan aktivitas LMS hari ini.</p>
+        <p className="">Ringkasan aktivitas LMS hari ini.</p>
       </div>
 
       {/* 1. STATS CARDS */}
@@ -96,7 +96,7 @@ export default function AdminDashboard() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{card.value}</div>
-              <p className="text-xs text-muted-foreground">{card.desc}</p>
+              <p className="text-xs ">{card.desc}</p>
             </CardContent>
           </Card>
         ))}
@@ -129,12 +129,12 @@ export default function AdminDashboard() {
                     <TableRow key={idx}>
                       <TableCell>
                         <div className="font-medium">{act.user.name}</div>
-                        <div className="text-xs text-slate-500">
+                        <div className="text-xs ">
                           {act.user.email}
                         </div>
                       </TableCell>
                       <TableCell>{act.journey.name}</TableCell>
-                      <TableCell className="text-right text-xs text-slate-500">
+                      <TableCell className="text-right text-xs ">
                         {format(
                           new Date(act.enrolled_at),
                           "d MMM yyyy, HH:mm",
@@ -150,13 +150,13 @@ export default function AdminDashboard() {
         </Card>
 
         {/* Placeholder untuk Grafik AI nanti */}
-        <Card className="col-span-3 bg-slate-50 border-dashed">
+        <Card className="col-span-3  border-dashed">
           <CardHeader>
-            <CardTitle className="text-slate-500">
+            <CardTitle className="">
               AI Insights (Coming Soon)
             </CardTitle>
           </CardHeader>
-          <CardContent className="flex items-center justify-center h-[200px] text-slate-400 text-sm text-center px-4">
+          <CardContent className="flex items-center justify-center h-[200px] text-sm text-center px-4">
             Area ini akan menampilkan prediksi drop-out siswa dan rekomendasi
             materi berbasis Python ML.
           </CardContent>

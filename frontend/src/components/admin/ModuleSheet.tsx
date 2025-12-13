@@ -130,7 +130,7 @@ export default function ModuleSheet({
             <FormLabel>URL Video (YouTube)</FormLabel>
             <FormControl>
               <div className="relative">
-                <Video className="absolute left-3 top-2.5 h-4 w-4 text-slate-500" />
+                <Video className="absolute left-3 top-2.5 h-4 w-4 " />
                 <Input
                   {...field}
                   className="pl-9"

@@ -41,7 +41,7 @@ export default function ModuleList({
   onDelete,
 }: ModuleListProps) {
   return (
-    <div className="bg-white rounded-lg border shadow-sm p-4">
+    <div className=" rounded-lg border shadow-sm p-4">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-sm font-medium">Silabus / Modul</h3>
         <Button size="sm" onClick={onAdd}>
@@ -51,7 +51,7 @@ export default function ModuleList({
 
       <div className="space-y-2 max-h-[520px] overflow-y-auto pr-1">
         {modules.length === 0 ? (
-          <div className="text-sm text-muted-foreground text-center py-6 italic border-dashed rounded-md border p-4">
+          <div className="text-sm  text-center py-6 italic border-dashed rounded-md border p-4">
             Belum ada modul
           </div>
         ) : (
@@ -78,7 +78,7 @@ export default function ModuleList({
               </div>
 
               <div className="flex items-center gap-2">
-                <span className="mr-1 text-muted-foreground hidden sm:inline">
+                <span className="mr-1  hidden sm:inline">
                   {getIcon(mod.type)}
                 </span>
                 <Button variant="ghost" size="icon" onClick={() => onEdit(mod)}>
@@ -91,7 +91,7 @@ export default function ModuleList({
                 >
                   <Trash className="w-4 h-4 text-red-600" />
                 </Button>
-                <div className="cursor-grab px-1 text-muted-foreground hidden sm:flex">
+                <div className="cursor-grab px-1  hidden sm:flex">
                   <GripVertical className="w-4 h-4" />
                 </div>
               </div>

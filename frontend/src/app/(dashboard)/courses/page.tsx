@@ -65,12 +65,12 @@ export default function CourseCatalogPage() {
           <h2 className="text-2xl font-semibold tracking-tight">
             Jelajah Kelas
           </h2>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm ">
             Temukan materi pembelajaran terbaik untuk mengembangkan karier
             developermu.
           </p>
         </div>
-        <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
+        <div className="flex flex-wrap gap-2 text-xs ">
           <span className="rounded-full bg-muted px-3 py-1">
             ☕ Belajar fleksibel, kapan saja
           </span>
@@ -89,7 +89,7 @@ export default function CourseCatalogPage() {
           <h3 className="text-base font-semibold tracking-tight">
             Katalog kelas masih kosong
           </h3>
-          <p className="mt-1 max-w-md text-sm text-muted-foreground">
+          <p className="mt-1 max-w-md text-sm ">
             Nantikan berbagai kelas seru yang akan segera hadir untuk menemani
             perjalanan belajarmu.
           </p>
@@ -101,7 +101,7 @@ export default function CourseCatalogPage() {
               difficultyConfig[course.difficulty || ""] ??
               ({
                 label: course.difficulty || "Semua level",
-                className: "border-slate-200 bg-slate-50 text-slate-700",
+                className: "border-slate-200 bg-slate-50",
               } as const);
 
             return (
@@ -119,7 +119,7 @@ export default function CourseCatalogPage() {
                       className="object-cover"
                     />
                   ) : (
-                    <div className="flex h-full w-full items-center justify-center text-xs text-muted-foreground">
+                    <div className="flex h-full w-full items-center justify-center text-xs ">
                       Tidak ada gambar
                     </div>
                   )}
@@ -140,12 +140,12 @@ export default function CourseCatalogPage() {
                 </CardHeader>
 
                 <CardContent className="flex-1 space-y-3 p-4 pt-1">
-                  <p className="mb-2 line-clamp-3 text-xs text-muted-foreground">
+                  <p className="mb-2 line-clamp-3 text-xs ">
                     {course.summary ||
                       "Belum ada deskripsi singkat untuk kelas ini."}
                   </p>
 
-                  <div className="flex items-center justify-between text-[11px] font-medium text-muted-foreground">
+                  <div className="flex items-center justify-between text-[11px] font-medium ">
                     <div className="flex items-center gap-1.5">
                       <Trophy className="h-3.5 w-3.5 text-amber-500" />
                       <span>{course.point ?? 0} XP</span>

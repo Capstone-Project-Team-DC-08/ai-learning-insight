@@ -5,12 +5,19 @@ import { BlockNoteEditor, PartialBlock } from "@blocknote/core";
 import { useCreateBlockNote } from "@blocknote/react";
 import { BlockNoteView } from "@blocknote/mantine";
 import "@blocknote/mantine/style.css";
+import { useTheme } from "next-themes";
 
 interface ViewerProps {
   content: string; // JSON String dari DB
 }
 
 export default function BlockNoteViewer({ content }: ViewerProps) {
+  const { theme, systemTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
+
+  const resolvedTheme = theme === "system" ? systemTheme : theme;
   // Parsing konten
   const initialBlocks = useMemo(() => {
     try {
@@ -33,7 +40,7 @@ export default function BlockNoteViewer({ content }: ViewerProps) {
       <BlockNoteView
         editor={editor}
         editable={false} // <--- KUNCI: Read Only
-        theme="light"
+        theme={resolvedTheme === "dark" ? "dark" : "light"}
       />
     </div>
   );
