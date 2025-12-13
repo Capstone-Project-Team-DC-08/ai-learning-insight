@@ -14,14 +14,13 @@ const init = async () => {
     host: process.env.HOST || "localhost",
     routes: {
       cors: {
-        origin: [ "http://localhost:3000"],
+        origin: ["https://pacupintar.netlify.app"],
         credentials: true,
         headers: ["Content-Type", "Authorization"],
         additionalHeaders: ["Authorization"],
       },
     },
   });
-  //"https://pacupintar.netlify.app"
 
   // 2. Registrasi Plugin Autentikasi (JWT)
   await server.register(Jwt);
