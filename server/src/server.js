@@ -38,14 +38,8 @@ const init = async () => {
     verifyOptions: { algorithms: ["HS256"] },
   });
 
-  // Set default auth strategy (opsional, tapi bagus untuk keamanan default)
-  // server.auth.default('jwt');
-  // Catatan: Kita tidak set default dulu agar route Register/Login bisa diakses tanpa token.
-
-  // 4. Daftarkan Routes
   server.route([...authRoutes, ...studentRoutes, ...adminRoutes]);
 
-  // 5. Jalankan Server
   await server.start();
   console.log("🚀 Server berjalan pada %s", server.info.uri);
 };

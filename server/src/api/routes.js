@@ -20,7 +20,6 @@ module.exports = [
             "intermediate",
             "advanced"
           ),
-          // ... validasi lain
         }),
       },
     },
