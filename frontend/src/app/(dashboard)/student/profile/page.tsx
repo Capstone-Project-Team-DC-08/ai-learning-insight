@@ -180,12 +180,12 @@ export default function StudentProfilePage() {
               <Card className="border border-slate-200 ">
                 <CardContent className="p-5">
                   <div className="flex items-start gap-4">
-                    <div className="h-11 w-11 rounded-lg  flex items-center justify-center shrink-0">
+                    <div className="h-11 w-11 rounded-lg flex border border-slate-200 items-center justify-center shrink-0">
                       <PersonaIcon className="h-5 w-5 " />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-medium uppercase tracking-wider">
-                        Persona
+                        Karakteristik Siswa
                       </p>
                       <h3 className="text-base font-semibold  mt-1 capitalize">
                         {insight.persona?.persona_label || "Balanced Learner"}
@@ -221,12 +221,12 @@ export default function StudentProfilePage() {
               <Card className="border border-slate-200 ">
                 <CardContent className="p-5">
                   <div className="flex items-start gap-4">
-                    <div className="h-11 w-11 rounded-lg  flex items-center justify-center shrink-0">
+                    <div className="h-11 w-11 rounded-lg border border-slate-200 flex items-center justify-center shrink-0">
                       <PaceIcon className="h-5 w-5 " />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-medium  uppercase tracking-wider">
-                        Pace Belajar
+                        Kebiasaan Belajar
                       </p>
                       <h3 className="text-base font-semibold mt-1 capitalize">
                         {insight.pace?.pace_label || "Consistent Learner"}
@@ -252,7 +252,7 @@ export default function StudentProfilePage() {
               <Card className="border border-slate-200 ">
                 <CardContent className="p-5">
                   <div className="flex items-start gap-4">
-                    <div className="h-10 w-10 rounded-lg  border border-slate-200 flex items-center justify-center shrink-0">
+                    <div className="h-10 w-10 rounded-lg border border-slate-200 flex items-center justify-center shrink-0">
                       <Lightbulb className="h-5 w-5 " />
                     </div>
                     <div className="flex-1">
@@ -261,17 +261,17 @@ export default function StudentProfilePage() {
                       </p>
                       <div
                         className="
-    prose prose-sm max-w-none
-    prose-neutral
-    dark:prose-invert
-    prose-p:my-1.5
-    prose-p:leading-relaxed
-    prose-ul:my-2
-    prose-li:my-0.5
-    prose-headings:font-semibold
-    prose-h3:text-sm
-    prose-h4:text-sm
-  "
+                          prose prose-sm max-w-none
+                          prose-neutral
+                          dark:prose-invert
+                          prose-p:my-1.5
+                          prose-p:leading-relaxed
+                          prose-ul:my-2
+                          prose-li:my-0.5
+                          prose-headings:font-semibold
+                          prose-h3:text-sm
+                          prose-h4:text-sm
+                        "
                       >
                         <ReactMarkdown>
                           {insight.advice.advice_text}
@@ -370,8 +370,8 @@ export default function StudentProfilePage() {
 
       {/* Footer Info */}
       <div className=" rounded-lg p-4 border border-slate-100">
-        <p className="text-xs ">
-          <span className="font-medium ">Bagaimana ini dihitung?</span> AI
+        <p className="text-xs text-black/50 dark:text-white/50">
+          <span className="font-semibold">Bagaimana ini dihitung?</span> AI
           menganalisis waktu belajar, kecepatan menyelesaikan materi,
           konsistensi jadwal, dan performa quiz untuk mengidentifikasi profil
           belajarmu.

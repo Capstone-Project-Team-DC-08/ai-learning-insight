@@ -158,12 +158,8 @@ export default function StudentDashboard() {
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm  font-medium">
-                  Total Kelas
-                </p>
-                <p className="text-2xl font-semibold  mt-1">
-                  {stats.total}
-                </p>
+                <p className="text-sm  font-medium">Total Kelas</p>
+                <p className="text-2xl font-semibold  mt-1">{stats.total}</p>
               </div>
               <div className="h-10 w-10 rounded-lg  flex items-center justify-center">
                 <BookOpen className="h-5 w-5 " />
@@ -176,9 +172,7 @@ export default function StudentDashboard() {
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm  font-medium">
-                  Sedang Dipelajari
-                </p>
+                <p className="text-sm  font-medium">Sedang Dipelajari</p>
                 <p className="text-2xl font-semibold  mt-1">
                   {stats.inProgress}
                 </p>
@@ -194,9 +188,7 @@ export default function StudentDashboard() {
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm  font-medium">
-                  Kelas Selesai
-                </p>
+                <p className="text-sm  font-medium">Kelas Selesai</p>
                 <p className="text-2xl font-semibold  mt-1">
                   {stats.completed}
                 </p>
@@ -212,9 +204,7 @@ export default function StudentDashboard() {
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm  font-medium">
-                  Completion Rate
-                </p>
+                <p className="text-sm  font-medium">Completion Rate</p>
                 <p className="text-2xl font-semibold mt-1">
                   {stats.total > 0
                     ? Math.round((stats.completed / stats.total) * 100)
@@ -248,9 +238,7 @@ export default function StudentDashboard() {
                       <CardTitle className="text-base font-semibold ">
                         Profil Belajar
                       </CardTitle>
-                      <p className="text-xs ">
-                        Hasil analisis AI
-                      </p>
+                      <p className="text-xs ">Hasil analisis AI</p>
                     </div>
                   </div>
                   <Link href="/student/profile">
@@ -269,28 +257,28 @@ export default function StudentDashboard() {
                 {/* Dual Display - Persona & Pace */}
                 <div className="grid grid-cols-2 gap-4">
                   {/* Persona */}
-                  <div className=" rounded-xl p-4">
+                  <div className="border border-slate-100 rounded-xl p-4">
                     <p className="text-xs  uppercase tracking-wider">
-                      Persona
+                      Karakteristik
                     </p>
                     <p className="text-base font-semibold  mt-1 capitalize">
                       {insight.persona?.persona_label || "The Consistent"}
                     </p>
-                    <p className="text-xs  mt-1 line-clamp-2">
+                    <p className="text-xs text-slate-500 dark:text-white/75 mt-1 line-clamp-2">
                       {insight.persona?.characteristics?.[0] ||
                         "Pola belajar yang konsisten"}
                     </p>
                   </div>
 
                   {/* Pace */}
-                  <div className=" rounded-xl p-4">
+                  <div className="border border-slate-100 rounded-xl p-4">
                     <p className="text-xs  uppercase tracking-wider">
-                      Pace
+                      Kebiasaan
                     </p>
                     <p className="text-base font-semibold  mt-1 capitalize">
                       {insight.pace?.pace_label || "Consistent Learner"}
                     </p>
-                    <p className="text-xs  mt-1 line-clamp-2">
+                    <p className="text-xs text-slate-500 dark:text-white/75 mt-1 line-clamp-2">
                       {insight.pace?.insight?.slice(0, 60) ||
                         "Belajar dengan ritme konsisten"}
                       ...
@@ -304,9 +292,10 @@ export default function StudentDashboard() {
                     <p className="text-xs uppercase tracking-wider mb-1">
                       Rekomendasi
                     </p>
-                    <ReactMarkdown >
-                      {`${insight.advice.advice_text.slice(0, 120)}...`}
-                    </ReactMarkdown>
+                    <p className="text-xs text-slate-500 dark:text-white/75 mt-1 line-clamp-2">
+                      Halo {user?.name}, ketuk tombol detail untuk melihat
+                      rekomendasi personal dari Ai!
+                    </p>
                   </div>
                 )}
               </CardContent>
@@ -429,9 +418,7 @@ export default function StudentDashboard() {
                 <Sparkles className="h-4 w-4 " />
               </div>
               <div>
-                <p className="font-medium text-sm ">
-                  Profil Belajar
-                </p>
+                <p className="font-medium text-sm ">Profil Belajar</p>
                 <p className="text-xs ">Lihat insight AI</p>
               </div>
             </CardContent>

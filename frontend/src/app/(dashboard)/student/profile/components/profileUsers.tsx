@@ -76,16 +76,14 @@ const ProfileUsersPage = () => {
             alt={user?.name}
             className="object-cover"
           />
-          <AvatarFallback className="text-xl text-slate-600 font-medium">
+          <AvatarFallback className="text-xl text-slate-600 dark:text-white font-medium">
             {user?.name?.charAt(0).toUpperCase() || "U"}
           </AvatarFallback>
         </Avatar>
 
         {/* User Info */}
         <div className="flex-1 text-center sm:text-left">
-          <h1 className="text-xl font-semibold ">
-            {user?.name || "User"}
-          </h1>
+          <h1 className="text-xl font-semibold ">{user?.name || "User"}</h1>
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-1 sm:gap-4 mt-1">
             {user?.email && (
               <p className="text-sm  flex items-center gap-1.5">
@@ -105,21 +103,15 @@ const ProfileUsersPage = () => {
         {/* Stats */}
         <div className="flex gap-6 sm:gap-8 text-center mt-2 sm:mt-0">
           <div>
-            <p className="text-2xl font-semibold t">
-              {stats.total}
-            </p>
+            <p className="text-2xl font-semibold t">{stats.total}</p>
             <p className="text-xs ">Kelas</p>
           </div>
           <div className="pl-6 sm:pl-8 border-l border-slate-200">
-            <p className="text-2xl font-semibold ">
-              {stats.completed}
-            </p>
+            <p className="text-2xl font-semibold ">{stats.completed}</p>
             <p className="text-xs ">Selesai</p>
           </div>
           <div className="pl-6 sm:pl-8 border-l border-slate-200">
-            <p className="text-2xl font-semibold ">
-              {stats.inProgress}
-            </p>
+            <p className="text-2xl font-semibold ">{stats.inProgress}</p>
             <p className="text-xs ">Aktif</p>
           </div>
         </div>

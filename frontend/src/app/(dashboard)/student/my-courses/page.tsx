@@ -177,9 +177,7 @@ export default function MyCoursesPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-semibold ">Kelas Saya</h1>
-          <p className=" mt-1">
-            Kelola dan pantau progress belajarmu
-          </p>
+          <p className=" mt-1">Kelola dan pantau progress belajarmu</p>
         </div>
         <Link href="/courses">
           <Button className=" hover:bg-slate-800">
@@ -197,9 +195,7 @@ export default function MyCoursesPage() {
               <BookOpen className="h-5 w-5 " />
             </div>
             <div>
-              <p className="text-2xl font-semibold ">
-                {courses.length}
-              </p>
+              <p className="text-2xl font-semibold ">{courses.length}</p>
               <p className="text-xs ">Total Kelas</p>
             </div>
           </div>
@@ -254,7 +250,7 @@ export default function MyCoursesPage() {
           <TabsList className="inline-flex h-auto p-1  rounded-lg w-auto min-w-full sm:min-w-0">
             <TabsTrigger
               value="all"
-              className="p-1 sm:px-3 sm:py-2 text-sm rounded-md data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm text-slate-600 whitespace-nowrap"
+              className="p-1 sm:px-3 sm:py-2 text-sm rounded-md data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm text-slate-600 dark:text-slate-100/50 whitespace-nowrap"
             >
               Semua
               <span className="ml-1 sm:ml-1.5 text-xs  data-[state=active]:bg-slate-100 px-1.5 py-0.5 rounded">
@@ -263,7 +259,7 @@ export default function MyCoursesPage() {
             </TabsTrigger>
             <TabsTrigger
               value="in-progress"
-              className="p-1 sm:px-3 sm:py-2 text-sm rounded-md data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm text-slate-600 whitespace-nowrap"
+              className="p-1 sm:px-3 sm:py-2 text-sm rounded-md data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm text-slate-600 dark:text-slate-100/50 whitespace-nowrap"
             >
               Dipelajari
               <span className="ml-1 sm:ml-1.5 text-xs  data-[state=active]:bg-slate-100 px-1.5 py-0.5 rounded">
@@ -272,7 +268,7 @@ export default function MyCoursesPage() {
             </TabsTrigger>
             <TabsTrigger
               value="completed"
-              className="p-1 sm:px-3 sm:py-2 text-sm rounded-md data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm text-slate-600 whitespace-nowrap"
+              className="p-1 sm:px-3 sm:py-2 text-sm rounded-md data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm text-slate-600 dark:text-slate-100/50 whitespace-nowrap"
             >
               Selesai
               <span className="ml-1 sm:ml-1.5 text-xs  data-[state=active]:bg-slate-100 px-1.5 py-0.5 rounded">
@@ -281,7 +277,7 @@ export default function MyCoursesPage() {
             </TabsTrigger>
             <TabsTrigger
               value="not-started"
-              className="p-1 sm:px-3 sm:py-2 text-sm rounded-md data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm text-slate-600 whitespace-nowrap"
+              className="p-1 sm:px-3 sm:py-2 text-sm rounded-md data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm text-slate-600 dark:text-slate-100/50 whitespace-nowrap"
             >
               Belum Mulai
               <span className="ml-1 sm:ml-1.5 text-xs  data-[state=active]:bg-slate-100 px-1.5 py-0.5 rounded">

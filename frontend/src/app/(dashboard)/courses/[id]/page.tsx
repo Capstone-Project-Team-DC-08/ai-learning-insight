@@ -371,9 +371,7 @@ export default function CourseDetailPage() {
 
               {course.is_enrolled && (
                 <div className="pt-3 space-y-2">
-                  <p className="text-xs ">
-                    Progres belajar kamu
-                  </p>
+                  <p className="text-xs ">Progres belajar kamu</p>
                   <Progress value={progress} className="h-2" />
                   <p className="text-xs ">
                     Sudah selesai{" "}
@@ -382,17 +380,6 @@ export default function CourseDetailPage() {
                   </p>
                 </div>
               )}
-            </CardContent>
-          </Card>
-
-          <Card className="border-dashed border-border/70 bg-muted/30">
-            <CardContent className="py-6 text-xs ">
-              Area ini bisa kamu gunakan nanti untuk:
-              <ul className="mt-2 list-disc space-y-1 pl-4">
-                <li>Rekomendasi kelas serupa</li>
-                <li>Testimoni / rating dari siswa lain</li>
-                <li>Catatan atau prerequisite sebelum mulai</li>
-              </ul>
             </CardContent>
           </Card>
         </aside>
