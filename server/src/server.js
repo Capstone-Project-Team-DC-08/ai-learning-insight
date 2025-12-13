@@ -14,10 +14,10 @@ const init = async () => {
     host: process.env.HOST || "localhost",
     routes: {
       cors: {
-        origin: ["http://localhost:3000"], // Mengizinkan Frontend (Next.js) mengakses Backend ini
+        origin: ["https://pacupintar.netlify.app"],
         credentials: true,
-        headers: ['Content-Type', 'Authorization'],
-        additionalHeaders: ['Authorization']
+        headers: ["Content-Type", "Authorization"],
+        additionalHeaders: ["Authorization"],
       },
     },
   });
