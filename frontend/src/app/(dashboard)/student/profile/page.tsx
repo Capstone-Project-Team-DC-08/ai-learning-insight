@@ -55,8 +55,7 @@ const personaConfig: Record<
   },
   "the struggler": {
     icon: AlertCircle,
-    description:
-      "Masih mencari ritme belajar yang tepat, butuh dukungan lebih",
+    description: "Masih mencari ritme belajar yang tepat, butuh dukungan lebih",
   },
 };
 
@@ -147,9 +146,7 @@ export default function StudentProfilePage() {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-semibold ">
-              Profil Belajar
-            </h2>
+            <h2 className="text-lg font-semibold ">Profil Belajar</h2>
             <p className="text-sm ">
               Hasil analisis AI berdasarkan aktivitas belajarmu
             </p>
@@ -228,13 +225,13 @@ export default function StudentProfilePage() {
                       <PaceIcon className="h-5 w-5 " />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+                      <p className="text-xs font-medium  uppercase tracking-wider">
                         Pace Belajar
                       </p>
                       <h3 className="text-base font-semibold mt-1 capitalize">
                         {insight.pace?.pace_label || "Consistent Learner"}
                       </h3>
-                      <p className="text-sm text-slate-500 mt-1.5">
+                      <p className="text-sm  mt-1.5">
                         {paceConfig[paceLabel]?.description ||
                           "Belajar dengan ritme yang sesuai"}
                       </p>
@@ -243,9 +240,7 @@ export default function StudentProfilePage() {
 
                   {insight.pace?.insight && (
                     <div className="mt-4 pt-4 border-t border-slate-100">
-                      <p className="text-sm text-slate-600">
-                        {insight.pace.insight}
-                      </p>
+                      <p className="text-sm ">{insight.pace.insight}</p>
                     </div>
                   )}
                 </CardContent>
@@ -261,11 +256,26 @@ export default function StudentProfilePage() {
                       <Lightbulb className="h-5 w-5 " />
                     </div>
                     <div className="flex-1">
-                      <p className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">
+                      <p className="text-xs font-medium uppercase tracking-wider mb-2">
                         Rekomendasi AI
                       </p>
-                      <div className="prose prose-sm prose-slate max-w-none prose-p:my-1.5 prose-p:text-slate-700 prose-p:leading-relaxed prose-strong:text-slate-800 prose-ul:my-2 prose-ul:text-slate-700 prose-li:my-0.5 prose-headings:text-slate-800 prose-headings:font-semibold prose-h3:text-sm prose-h4:text-sm">
-                        <ReactMarkdown>{insight.advice.advice_text}</ReactMarkdown>
+                      <div
+                        className="
+    prose prose-sm max-w-none
+    prose-neutral
+    dark:prose-invert
+    prose-p:my-1.5
+    prose-p:leading-relaxed
+    prose-ul:my-2
+    prose-li:my-0.5
+    prose-headings:font-semibold
+    prose-h3:text-sm
+    prose-h4:text-sm
+  "
+                      >
+                        <ReactMarkdown>
+                          {insight.advice.advice_text}
+                        </ReactMarkdown>
                       </div>
                     </div>
                   </div>
@@ -276,8 +286,8 @@ export default function StudentProfilePage() {
         ) : (
           <Card className="border-2 border-dashed border-slate-200 ">
             <CardContent className="py-12 text-center">
-              <div className="w-12 h-12 rounded-lg bg-slate-100 flex items-center justify-center mx-auto mb-4">
-                <Sparkles className="w-6 h-6 text-slate-400" />
+              <div className="w-12 h-12 rounded-lg  flex items-center justify-center mx-auto mb-4">
+                <Sparkles className="w-6 h-6 " />
               </div>
               <h3 className="text-base font-semibold mb-1">
                 Temukan Profil Belajarmu
@@ -326,9 +336,7 @@ export default function StudentProfilePage() {
                 <div className="flex items-start gap-3">
                   <Clock className="h-5 w-5  mt-0.5 shrink-0" />
                   <div>
-                    <h4 className="font-medium text-sm">
-                      Waktu Optimal
-                    </h4>
+                    <h4 className="font-medium text-sm">Waktu Optimal</h4>
                     {focusTime && focusTime.total_activities > 0 ? (
                       <>
                         <p className="text-sm  mt-1">
@@ -363,10 +371,8 @@ export default function StudentProfilePage() {
       {/* Footer Info */}
       <div className=" rounded-lg p-4 border border-slate-100">
         <p className="text-xs ">
-          <span className="font-medium ">
-            Bagaimana ini dihitung?
-          </span>{" "}
-          AI menganalisis waktu belajar, kecepatan menyelesaikan materi,
+          <span className="font-medium ">Bagaimana ini dihitung?</span> AI
+          menganalisis waktu belajar, kecepatan menyelesaikan materi,
           konsistensi jadwal, dan performa quiz untuk mengidentifikasi profil
           belajarmu.
         </p>

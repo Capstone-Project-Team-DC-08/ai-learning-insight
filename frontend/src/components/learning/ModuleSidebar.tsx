@@ -65,7 +65,7 @@ export default function ModuleSidebar({
           <div>
             <Link
               href={`/courses/${courseId}`}
-              className="inline-flex items-center text-xs text-slate-500 hover:text-slate-800"
+              className="inline-flex items-center text-xs  hover:text-slate-800"
             >
               <ChevronLeft className="w-3 h-3 mr-1" /> Kembali ke Kelas
             </Link>
@@ -127,7 +127,7 @@ export default function ModuleSidebar({
                   </Link>
 
                   <div className="mt-2 flex items-center gap-2">
-                    <span className="text-[11px] text-slate-500 bg-slate-100 px-2 py-0.5 rounded uppercase tracking-wide">
+                    <span className="text-[11px]  bg-slate-100 px-2 py-0.5 rounded uppercase tracking-wide">
                       {mod.type}
                     </span>
 

@@ -31,7 +31,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               <span className="text-sm font-semibold leading-none tracking-tight">
                 LMS Code
               </span>
-              <span className="text-xs text-muted-foreground">
+              <span className="text-xs ">
                 Dashboard siswa
               </span>
             </div>

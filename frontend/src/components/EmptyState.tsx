@@ -10,7 +10,7 @@ function EmptyState() {
       <h3 className="text-base font-semibold tracking-tight">
         Mulai perjalanan belajar pertamamu 🚀
       </h3>
-      <p className="mt-1 max-w-md text-sm text-muted-foreground">
+      <p className="mt-1 max-w-md text-sm ">
         Daftar ke kelas yang kamu minati dan pantau progres belajarmu langsung
         dari dashboard ini.
       </p>

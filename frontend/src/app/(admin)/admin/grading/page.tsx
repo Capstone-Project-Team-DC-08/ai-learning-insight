@@ -130,12 +130,12 @@ export default function AdminGradingPage() {
     <div className="space-y-6">
       <div>
         <h2 className="text-3xl font-bold tracking-tight">Penilaian Tugas</h2>
-        <p className="text-slate-500">
+        <p className="">
           Review project siswa dan berikan feedback.
         </p>
       </div>
 
-      <div className="border rounded-md bg-white shadow-sm">
+      <div className="border rounded-md shadow-sm">
         <Table>
           <TableHeader>
             <TableRow>
@@ -157,7 +157,7 @@ export default function AdminGradingPage() {
               <TableRow>
                 <TableCell
                   colSpan={5}
-                  className="text-center py-10 text-slate-500"
+                  className="text-center py-10 "
                 >
                   Tidak ada tugas yang perlu direview 🎉
                 </TableCell>
@@ -167,7 +167,7 @@ export default function AdminGradingPage() {
                 <TableRow key={sub.id}>
                   <TableCell>
                     <div className="font-medium">{sub.submitter.name}</div>
-                    <div className="text-xs text-slate-500">
+                    <div className="text-xs ">
                       {sub.submitter.email}
                     </div>
                   </TableCell>
@@ -175,7 +175,7 @@ export default function AdminGradingPage() {
                     <div className="text-sm font-medium">
                       {sub.journey.name}
                     </div>
-                    <div className="text-xs text-slate-500">
+                    <div className="text-xs ">
                       {sub.quiz.title}
                     </div>
                   </TableCell>
@@ -194,7 +194,7 @@ export default function AdminGradingPage() {
                       Buka Link <ExternalLink className="ml-1 h-3 w-3" />
                     </a>
                     {sub.app_comment && (
-                      <div className="mt-1 text-xs text-slate-500 italic max-w-[200px] truncate">
+                      <div className="mt-1 text-xs  italic max-w-[200px] truncate">
                         "{sub.app_comment}"
                       </div>
                     )}
@@ -223,7 +223,7 @@ export default function AdminGradingPage() {
           </DialogHeader>
 
           {selectedSub && (
-            <div className="bg-slate-50 p-3 rounded border text-sm mb-4 space-y-1">
+            <div className=" p-3 rounded border text-sm mb-4 space-y-1">
               <p>
                 <strong>Link:</strong>{" "}
                 <a

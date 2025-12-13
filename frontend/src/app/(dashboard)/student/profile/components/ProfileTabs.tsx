@@ -35,7 +35,7 @@ export const ProfileTabs = () => {
               ${
                 isActive
                   ? "bg-white text-slate-900 shadow-sm"
-                  : "text-slate-500 hover:text-slate-700"
+                  : " hover:text-slate-700"
               }
             `}
           >

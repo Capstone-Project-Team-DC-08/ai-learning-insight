@@ -93,7 +93,7 @@ export default function CourseEditorPage() {
 
   if (!course) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center text-muted-foreground">
+      <div className="flex min-h-[60vh] items-center justify-center ">
         Kelas tidak ditemukan
       </div>
     );
@@ -106,7 +106,7 @@ export default function CourseEditorPage() {
         <div className="flex items-center gap-4">
           <button
             onClick={() => router.push("/admin/courses")}
-            className="inline-flex items-center rounded-md border px-2 py-1 text-sm text-muted-foreground hover:bg-muted/40"
+            className="inline-flex items-center rounded-md border px-2 py-1 text-sm  hover:bg-muted/40"
             aria-label="Kembali ke daftar"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
@@ -119,7 +119,7 @@ export default function CourseEditorPage() {
             {course.status?.toUpperCase() ?? "UNKNOWN"}
           </span>
           <button
-            className="text-sm text-muted-foreground hover:text-foreground"
+            className="text-sm  hover:text-foreground"
             onClick={fetchCourse}
             aria-label="Refresh"
           >

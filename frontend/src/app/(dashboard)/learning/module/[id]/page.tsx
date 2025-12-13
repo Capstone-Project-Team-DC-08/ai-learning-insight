@@ -32,7 +32,7 @@ const BlockNoteViewer = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="h-40 bg-slate-100 animate-pulse rounded-lg" />
+      <div className="h-40  animate-pulse rounded-lg" />
     ),
   }
 );
@@ -278,7 +278,7 @@ export default function LearningPlayerPage() {
             <p className="text-green-700">
               Skor Anda: {Math.round(quizResult?.score || 100)}
             </p>
-            <p className="text-sm text-slate-500 mt-4">
+            <p className="text-sm  mt-4">
               Modul telah ditandai selesai.
             </p>
             <div className="mt-6">
@@ -311,7 +311,7 @@ export default function LearningPlayerPage() {
       if (!quizStarted) {
         return (
           <Card className="p-10 max-w-2xl mx-auto mt-4 text-center ">
-            <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-blue-100 flex items-center justify-center">
+            <div className="w-20 h-20 mx-auto mb-6 rounded-full  flex items-center justify-center">
               <PlayCircle className="w-10 h-10 text-blue-600" />
             </div>
             <Badge variant="outline" className="mb-3">
@@ -379,7 +379,7 @@ export default function LearningPlayerPage() {
                   {q.options.map((opt: string, oIdx: number) => (
                     <div
                       key={oIdx}
-                      className={`flex items-center space-x-2 p-3 border rounded-lg hover:bg-slate-50 cursor-pointer ${
+                      className={`flex items-center space-x-2 p-3 border rounded-lg cursor-pointer ${
                         quizAnswers[qIdx] === oIdx
                           ? "border-blue-500 "
                           : ""
@@ -404,7 +404,7 @@ export default function LearningPlayerPage() {
 
           {/* Show retry message if failed */}
           {quizResult && !quizResult.passed && (
-            <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg text-center">
+            <div className="mt-6 p-4  border border-red-200 rounded-lg text-center">
               <p className="text-red-700 font-medium">
                 Skor: {Math.round(quizResult.score)} - Belum mencapai KKM
               </p>
@@ -449,7 +449,7 @@ export default function LearningPlayerPage() {
             <p className="text-yellow-700">
               Tugas Anda sedang diperiksa oleh instruktur.
             </p>
-            <div className="mt-4 text-sm text-slate-600">
+            <div className="mt-4 text-sm ">
               <p>
                 Jika ingin, Anda dapat menunggu atau kembali ke halaman kelas.
               </p>
@@ -461,7 +461,7 @@ export default function LearningPlayerPage() {
       // Passed / Finished
       if (status === "finished" || module.submission_status === "passed") {
         return (
-          <Card className="p-8 max-w-2xl mx-auto mt-8 border border-green-200 bg-green-50 text-center">
+          <Card className="p-8 max-w-2xl mx-auto mt-8 border border-green-200 text-center">
             <CheckCircle className="w-16 h-16 mx-auto text-green-600 mb-4" />
             <h3 className="text-2xl font-bold text-green-800 mb-2">
               Tugas Lulus!
@@ -470,7 +470,7 @@ export default function LearningPlayerPage() {
               Selamat, Anda telah menyelesaikan modul ini.
             </p>
             {note && (
-              <div className="bg-white/60 p-4 rounded-lg text-sm text-left border border-green-200">
+              <div className=" p-4 rounded-lg text-sm text-left border border-green-200">
                 <strong>Feedback Instruktur:</strong>
                 <div className="mt-2">{note}</div>
               </div>
@@ -501,7 +501,7 @@ export default function LearningPlayerPage() {
                   Silakan perbaiki dan kirim ulang.
                 </p>
                 {note && (
-                  <div className="bg-white/80 p-3 rounded text-sm text-red-800 mb-4 text-left">
+                  <div className=" p-3 rounded text-sm text-red-800 mb-4 text-left">
                     <strong>Catatan Revisi:</strong>
                     <div className="mt-1">{note}</div>
                   </div>
@@ -510,17 +510,17 @@ export default function LearningPlayerPage() {
             ) : (
               <>
                 <Code className="w-12 h-12 mx-auto text-blue-600 mb-2" />
-                <h3 className="text-xl font-bold text-blue-900">
+                <h3 className="text-xl font-bold ">
                   Submission Project
                 </h3>
-                <p className="text-blue-700">
+                <p className="">
                   Upload tugas Anda untuk direview.
                 </p>
               </>
             )}
           </div>
 
-          <div className="space-y-4 bg-white p-4 rounded-lg border shadow-sm">
+          <div className="space-y-4  p-4 rounded-lg border shadow-sm">
             <div>
               <label className="text-sm font-medium mb-1 block">
                 Link Repository
@@ -544,7 +544,7 @@ export default function LearningPlayerPage() {
             size="lg"
             onClick={handleAction}
             disabled={actionLoading}
-            className="bg-blue-600 hover:bg-blue-700"
+            className="bg-blue-600 "
           >
             {actionLoading ? (
               <Loader2 className="animate-spin mr-2" />
@@ -571,7 +571,7 @@ export default function LearningPlayerPage() {
               title={module.title}
             />
           ) : (
-            <div className="flex items-center justify-center h-full text-white">
+            <div className="flex items-center justify-center h-full ">
               Video URL Invalid
             </div>
           )}
@@ -581,7 +581,7 @@ export default function LearningPlayerPage() {
 
     // ARTICLE (or default)
     return (
-      <div className="bg-white p-6 rounded-xl border shadow-sm min-h-[300px]">
+      <div className=" p-6 rounded-xl border shadow-sm min-h-[300px] ">
         {/* prefer BlockNoteViewer if content is blocknote JSON, else fall back to HtmlContent */}
         {module.content &&
         typeof module.content === "string" &&
@@ -689,7 +689,7 @@ export default function LearningPlayerPage() {
         </Badge>
       </div>
 
-      <h1 className="text-3xl font-bold text-slate-900 mb-6">{module.title}</h1>
+      <h1 className="text-3xl font-bold  mb-6">{module.title}</h1>
 
       {/* Content */}
       <div className="min-h-[300px]">{renderContent()}</div>

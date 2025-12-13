@@ -53,14 +53,14 @@ export default function AdminSidebar() {
           "group flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition",
           active
             ? "bg-muted/60 text-foreground shadow-sm"
-            : "text-muted-foreground hover:bg-muted/40"
+            : " hover:bg-muted/40"
         )}
         aria-current={active ? "page" : undefined}
       >
         <Icon
           className={cn(
             "h-5 w-5",
-            active ? "text-primary" : "text-muted-foreground"
+            active ? "text-primary" : ""
           )}
         />
         <span>{label}</span>
@@ -78,7 +78,7 @@ export default function AdminSidebar() {
           </div>
           <div>
             <h3 className="text-sm font-semibold leading-none">Admin Panel</h3>
-            <p className="text-xs text-muted-foreground">Dashboard & Kontrol</p>
+            <p className="text-xs ">Dashboard & Kontrol</p>
           </div>
         </Link>
       </div>

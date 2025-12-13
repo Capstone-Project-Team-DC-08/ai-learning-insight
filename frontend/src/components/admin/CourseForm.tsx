@@ -84,7 +84,7 @@ export default function CourseForm({ course, onSave }: CourseFormProps) {
   };
 
   return (
-    <div className="bg-white rounded-lg border shadow-sm p-6">
+    <div className=" rounded-lg border shadow-sm p-6">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
