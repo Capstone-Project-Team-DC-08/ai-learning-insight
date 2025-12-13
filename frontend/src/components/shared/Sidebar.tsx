@@ -2,12 +2,21 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, Compass, BookOpen, LogOut, User, Settings } from "lucide-react";
-import { deleteCookie } from "cookies-next";
+import {
+  LayoutDashboard,
+  Compass,
+  BookOpen,
+  LogOut,
+  User,
+  Settings,
+  LogIn,
+} from "lucide-react";
+import { deleteCookie, getCookie } from "cookies-next";
 
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
+import { useEffect, useState } from "react";
 
 const routes = [
   {
@@ -40,13 +49,20 @@ const routes = [
 export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
+  const [enrolling, setEnrolling] = useState(false);
+
+    useEffect(() => {
+    const token = getCookie("token");
+    setEnrolling(!!token);
+  }, []);
+
 
   const onLogout = () => {
     deleteCookie("token");
     if (typeof window !== "undefined") {
       localStorage.removeItem("user");
     }
-    router.push("/login");
+    router.push("/");
   };
 
   return (
@@ -103,14 +119,27 @@ export default function Sidebar() {
 
       {/* Logout */}
       <div className="mt-4 border-t pt-4">
-        <Button
-          variant="ghost"
-          onClick={onLogout}
-          className="flex w-full justify-center gap-2 px-2.5 py-2.5 text-sm text-destructive hover:bg-destructive/10 hover:text-destructive"
-        >
-          <LogOut className="mr-2 h-4 w-4" />
-          Keluar
-        </Button>
+        {enrolling ? (
+          <>
+            <Button
+              variant="ghost"
+              onClick={onLogout}
+              className="flex w-full justify-center gap-2 px-2.5 py-2.5 text-sm text-destructive hover:bg-destructive/10 hover:text-destructive"
+            >
+              <LogOut className="mr-2 h-4 w-4" />
+              Keluar
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button
+              className="flex w-full justify-center gap-2 px-2.5 py-2.5 text-sm "
+            >
+              <LogIn className="mr-2 h-4 w-4" />
+               <Link href={"/login"} >Masuk</Link>
+            </Button>
+          </>
+        )}
       </div>
     </aside>
   );

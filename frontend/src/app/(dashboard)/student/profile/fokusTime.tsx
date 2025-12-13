@@ -24,7 +24,7 @@ const COLORS = ["#475569", "#64748b", "#94a3b8", "#cbd5e1", "#e2e8f0"];
 export default function FocusTimeChart({ data }: FocusTimeChartProps) {
   if (!data || data.length === 0) {
     return (
-      <div className="flex items-center justify-center h-[220px] text-slate-400 text-sm">
+      <div className="flex items-center justify-center h-[220px]text-sm">
         Belum ada data aktivitas
       </div>
     );

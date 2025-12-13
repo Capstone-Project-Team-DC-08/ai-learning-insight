@@ -272,7 +272,7 @@ export default function LearningPlayerPage() {
       // Already passed
       if (quizResult?.passed || module.current_status === "finished") {
         return (
-          <Card className="p-10 text-center bg-green-50 border-green-200">
+          <Card className="p-10 text-center  border-green-200">
             <CheckCircle className="w-16 h-16 mx-auto text-green-600 mb-4" />
             <h3 className="text-2xl font-bold text-green-800">Quiz Lulus!</h3>
             <p className="text-green-700">
@@ -310,20 +310,20 @@ export default function LearningPlayerPage() {
       // Not started yet - Show start button
       if (!quizStarted) {
         return (
-          <Card className="p-10 max-w-2xl mx-auto mt-4 text-center border-slate-200">
+          <Card className="p-10 max-w-2xl mx-auto mt-4 text-center ">
             <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-blue-100 flex items-center justify-center">
               <PlayCircle className="w-10 h-10 text-blue-600" />
             </div>
             <Badge variant="outline" className="mb-3">
               Quiz
             </Badge>
-            <h3 className="text-2xl font-bold text-slate-900 mb-2">
+            <h3 className="text-2xl font-bold  mb-2">
               {module.title}
             </h3>
-            <p className="text-slate-500 mb-2">
+            <p className=" mb-2">
               Uji pemahaman Anda dengan menjawab {questions.length} pertanyaan
             </p>
-            <div className="flex justify-center gap-4 text-sm text-slate-500 mb-6">
+            <div className="flex justify-center gap-4 text-sm  mb-6">
               <span className="flex items-center gap-1">
                 <Clock className="w-4 h-4" />
                 {questions.length * 2} menit
@@ -352,13 +352,13 @@ export default function LearningPlayerPage() {
 
       // Quiz in progress
       return (
-        <Card className="p-6 max-w-3xl mx-auto mt-4 border-slate-200">
+        <Card className="p-6 max-w-3xl mx-auto mt-4 ">
           <div className="text-center mb-8">
             <Badge variant="outline" className="mb-2">
               Quiz Mode
             </Badge>
             <h3 className="text-xl font-bold">Uji Pemahaman Anda</h3>
-            <p className="text-slate-500">KKM: 70. Jawab dengan teliti.</p>
+            <p className="">KKM: 70. Jawab dengan teliti.</p>
           </div>
 
           <div className="space-y-8">
@@ -381,7 +381,7 @@ export default function LearningPlayerPage() {
                       key={oIdx}
                       className={`flex items-center space-x-2 p-3 border rounded-lg hover:bg-slate-50 cursor-pointer ${
                         quizAnswers[qIdx] === oIdx
-                          ? "border-blue-500 bg-blue-50"
+                          ? "border-blue-500 "
                           : ""
                       }`}
                     >

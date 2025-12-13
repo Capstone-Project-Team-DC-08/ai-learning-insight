@@ -7,14 +7,12 @@ import { Menu } from "lucide-react";
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-screen bg-muted/20">
-      {/* Sidebar Desktop */}
+  
       <div className="hidden md:fixed md:inset-y-0 md:flex md:w-64 md:flex-col z-40 border-r bg-background">
         <Sidebar />
       </div>
 
-      {/* Main Content */}
       <main className="flex-1 md:pl-64 flex flex-col">
-        {/* Topbar Mobile */}
         <header className="sticky top-0 z-30 border-b bg-background/80 px-4 py-3 backdrop-blur md:hidden">
           <div className="flex items-center justify-between">
             <Sheet>

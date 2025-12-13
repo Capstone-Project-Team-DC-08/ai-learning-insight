@@ -68,9 +68,9 @@ export default function MyCoursesPage() {
 
     return (
       <Link key={course.id} href={`/courses/${course.id}`} className="group">
-        <Card className="h-full overflow-hidden border border-slate-200 bg-white transition-all duration-200 hover:shadow-lg hover:border-slate-300">
+        <Card className="h-full overflow-hidden border border-slate-200 transition-all duration-200 hover:shadow-lg hover:border-slate-300">
           {/* Image */}
-          <div className="relative aspect-video w-full bg-slate-100 overflow-hidden">
+          <div className="relative aspect-video w-full overflow-hidden">
             {course.image_path ? (
               <Image
                 src={course.image_path}
@@ -80,14 +80,14 @@ export default function MyCoursesPage() {
               />
             ) : (
               <div className="flex h-full w-full items-center justify-center">
-                <BookOpen className="h-10 w-10 text-slate-300" />
+                <BookOpen className="h-10 w-10 " />
               </div>
             )}
 
             {/* Status Badge */}
             {isCompleted && (
               <div className="absolute top-3 right-3">
-                <div className="flex items-center gap-1 px-2 py-1 bg-emerald-500 text-white text-xs font-medium rounded-full">
+                <div className="flex items-center gap-1 px-2 py-1 bg-emerald-500  text-xs font-medium rounded-full">
                   <CheckCircle2 className="w-3 h-3" />
                   Selesai
                 </div>
@@ -104,14 +104,14 @@ export default function MyCoursesPage() {
                 {difficulty.label}
               </span>
               {isStarted && !isCompleted && (
-                <span className="text-xs text-slate-500">
+                <span className="text-xs ">
                   {Math.round(progress)}% selesai
                 </span>
               )}
             </div>
 
             {/* Title */}
-            <h3 className="font-semibold text-slate-900 line-clamp-2 mb-3 group-hover:text-slate-700 transition-colors">
+            <h3 className="font-semibold text-slate-900 line-clamp-2 mb-3  transition-colors">
               {course.name}
             </h3>
 
@@ -124,19 +124,19 @@ export default function MyCoursesPage() {
 
             {/* Action Button */}
             <div
-              className={`flex items-center justify-between pt-3 border-t border-slate-100 ${
+              className={`flex items-center justify-between pt-3 border-t  ${
                 isStarted && !isCompleted ? "" : "mt-auto"
               }`}
             >
-              <span className="text-sm font-medium text-slate-600 group-hover:text-slate-900 transition-colors">
+              <span className="text-sm font-medium  group-hover:text-slate-900 transition-colors">
                 {isCompleted
                   ? "Lihat Kelas"
                   : isStarted
                   ? "Lanjut Belajar"
                   : "Mulai Belajar"}
               </span>
-              <div className="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-slate-900 transition-colors">
-                <ArrowRight className="h-4 w-4 text-slate-500 group-hover:text-white transition-colors" />
+              <div className="h-8 w-8 rounded-full  flex items-center justify-center group-hover:bg-slate-900 transition-colors">
+                <ArrowRight className="h-4 w-4  group-hover:text-white transition-colors" />
               </div>
             </div>
           </CardContent>
@@ -151,17 +151,17 @@ export default function MyCoursesPage() {
     showAction = true
   ) => (
     <div className="col-span-full">
-      <div className="flex flex-col items-center justify-center py-16 px-4 bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200">
-        <div className="h-14 w-14 rounded-xl bg-slate-100 flex items-center justify-center mb-4">
+      <div className="flex flex-col items-center justify-center py-16 px-4  rounded-2xl border-2 border-dashed border-slate-200">
+        <div className="h-14 w-14 rounded-xl  flex items-center justify-center mb-4">
           {icon}
         </div>
-        <p className="text-slate-600 font-medium mb-1">{message}</p>
-        <p className="text-slate-400 text-sm mb-5">
+        <p className=" font-medium mb-1">{message}</p>
+        <p className=" text-sm mb-5">
           Temukan kelas yang sesuai dengan minatmu
         </p>
         {showAction && (
           <Link href="/courses">
-            <Button size="sm" className="bg-slate-900 hover:bg-slate-800">
+            <Button size="sm" className=" ">
               <Sparkles className="h-4 w-4 mr-2" />
               Jelajah Kelas
             </Button>
@@ -176,13 +176,13 @@ export default function MyCoursesPage() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-slate-900">Kelas Saya</h1>
-          <p className="text-slate-500 mt-1">
+          <h1 className="text-2xl font-semibold ">Kelas Saya</h1>
+          <p className=" mt-1">
             Kelola dan pantau progress belajarmu
           </p>
         </div>
         <Link href="/courses">
-          <Button className="bg-slate-900 hover:bg-slate-800">
+          <Button className=" hover:bg-slate-800">
             Jelajah Kelas Baru
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
@@ -191,58 +191,58 @@ export default function MyCoursesPage() {
 
       {/* Stats Summary */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="border border-slate-200 bg-white p-5">
+        <Card className="border border-slate-200  p-5">
           <div className="flex items-center gap-4">
-            <div className="h-10 w-10 rounded-lg bg-slate-100 flex items-center justify-center">
-              <BookOpen className="h-5 w-5 text-slate-500" />
+            <div className="h-10 w-10 rounded-lg flex items-center justify-center">
+              <BookOpen className="h-5 w-5 " />
             </div>
             <div>
-              <p className="text-2xl font-semibold text-slate-900">
+              <p className="text-2xl font-semibold ">
                 {courses.length}
               </p>
-              <p className="text-xs text-slate-500">Total Kelas</p>
+              <p className="text-xs ">Total Kelas</p>
             </div>
           </div>
         </Card>
 
-        <Card className="border border-slate-200 bg-white p-5">
+        <Card className="border border-slate-200  p-5">
           <div className="flex items-center gap-4">
-            <div className="h-10 w-10 rounded-lg bg-slate-100 flex items-center justify-center">
-              <Target className="h-5 w-5 text-slate-500" />
+            <div className="h-10 w-10 rounded-lg flex items-center justify-center">
+              <Target className="h-5 w-5 " />
             </div>
             <div>
-              <p className="text-2xl font-semibold text-slate-900">
+              <p className="text-2xl font-semibold ">
                 {inProgressCourses.length}
               </p>
-              <p className="text-xs text-slate-500">Sedang Dipelajari</p>
+              <p className="text-xs ">Sedang Dipelajari</p>
             </div>
           </div>
         </Card>
 
-        <Card className="border border-slate-200 bg-white p-5">
+        <Card className="border border-slate-200  p-5">
           <div className="flex items-center gap-4">
-            <div className="h-10 w-10 rounded-lg bg-slate-100 flex items-center justify-center">
-              <GraduationCap className="h-5 w-5 text-slate-500" />
+            <div className="h-10 w-10 rounded-lg  flex items-center justify-center">
+              <GraduationCap className="h-5 w-5 " />
             </div>
             <div>
-              <p className="text-2xl font-semibold text-slate-900">
+              <p className="text-2xl font-semibold ">
                 {completedCourses.length}
               </p>
-              <p className="text-xs text-slate-500">Selesai</p>
+              <p className="text-xs ">Selesai</p>
             </div>
           </div>
         </Card>
 
-        <Card className="border border-slate-200 bg-white p-5">
+        <Card className="border border-slate-200  p-5">
           <div className="flex items-center gap-4">
-            <div className="h-10 w-10 rounded-lg bg-slate-100 flex items-center justify-center">
-              <Clock className="h-5 w-5 text-slate-500" />
+            <div className="h-10 w-10 rounded-lg  flex items-center justify-center">
+              <Clock className="h-5 w-5 " />
             </div>
             <div>
-              <p className="text-2xl font-semibold text-slate-900">
+              <p className="text-2xl font-semibold ">
                 {notStartedCourses.length}
               </p>
-              <p className="text-xs text-slate-500">Belum Dimulai</p>
+              <p className="text-xs ">Belum Dimulai</p>
             </div>
           </div>
         </Card>
@@ -251,13 +251,13 @@ export default function MyCoursesPage() {
       {/* Tabs */}
       <Tabs defaultValue="all" className="w-full">
         <div className="overflow-x-hidden">
-          <TabsList className="inline-flex h-auto p-1 bg-slate-100 rounded-lg w-auto min-w-full sm:min-w-0">
+          <TabsList className="inline-flex h-auto p-1  rounded-lg w-auto min-w-full sm:min-w-0">
             <TabsTrigger
               value="all"
               className="p-1 sm:px-3 sm:py-2 text-sm rounded-md data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm text-slate-600 whitespace-nowrap"
             >
               Semua
-              <span className="ml-1 sm:ml-1.5 text-xs bg-slate-200 data-[state=active]:bg-slate-100 px-1.5 py-0.5 rounded">
+              <span className="ml-1 sm:ml-1.5 text-xs  data-[state=active]:bg-slate-100 px-1.5 py-0.5 rounded">
                 {courses.length}
               </span>
             </TabsTrigger>
@@ -266,7 +266,7 @@ export default function MyCoursesPage() {
               className="p-1 sm:px-3 sm:py-2 text-sm rounded-md data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm text-slate-600 whitespace-nowrap"
             >
               Dipelajari
-              <span className="ml-1 sm:ml-1.5 text-xs bg-slate-200 data-[state=active]:bg-slate-100 px-1.5 py-0.5 rounded">
+              <span className="ml-1 sm:ml-1.5 text-xs  data-[state=active]:bg-slate-100 px-1.5 py-0.5 rounded">
                 {inProgressCourses.length}
               </span>
             </TabsTrigger>
@@ -275,7 +275,7 @@ export default function MyCoursesPage() {
               className="p-1 sm:px-3 sm:py-2 text-sm rounded-md data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm text-slate-600 whitespace-nowrap"
             >
               Selesai
-              <span className="ml-1 sm:ml-1.5 text-xs bg-slate-200 data-[state=active]:bg-slate-100 px-1.5 py-0.5 rounded">
+              <span className="ml-1 sm:ml-1.5 text-xs  data-[state=active]:bg-slate-100 px-1.5 py-0.5 rounded">
                 {completedCourses.length}
               </span>
             </TabsTrigger>
@@ -284,7 +284,7 @@ export default function MyCoursesPage() {
               className="p-1 sm:px-3 sm:py-2 text-sm rounded-md data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm text-slate-600 whitespace-nowrap"
             >
               Belum Mulai
-              <span className="ml-1 sm:ml-1.5 text-xs bg-slate-200 data-[state=active]:bg-slate-100 px-1.5 py-0.5 rounded">
+              <span className="ml-1 sm:ml-1.5 text-xs  data-[state=active]:bg-slate-100 px-1.5 py-0.5 rounded">
                 {notStartedCourses.length}
               </span>
             </TabsTrigger>
@@ -295,7 +295,7 @@ export default function MyCoursesPage() {
           {courses.length === 0 ? (
             renderEmptyState(
               "Belum ada kelas yang diikuti",
-              <BookOpen className="h-6 w-6 text-slate-400" />
+              <BookOpen className="h-6 w-6 " />
             )
           ) : (
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -308,7 +308,7 @@ export default function MyCoursesPage() {
           {inProgressCourses.length === 0 ? (
             renderEmptyState(
               "Tidak ada kelas yang sedang dipelajari",
-              <Target className="h-6 w-6 text-slate-400" />
+              <Target className="h-6 w-6 " />
             )
           ) : (
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -321,7 +321,7 @@ export default function MyCoursesPage() {
           {completedCourses.length === 0 ? (
             renderEmptyState(
               "Belum ada kelas yang selesai",
-              <GraduationCap className="h-6 w-6 text-slate-400" />
+              <GraduationCap className="h-6 w-6 " />
             )
           ) : (
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -334,7 +334,7 @@ export default function MyCoursesPage() {
           {notStartedCourses.length === 0 ? (
             renderEmptyState(
               "Semua kelas sudah dimulai!",
-              <CheckCircle2 className="h-6 w-6 text-slate-400" />,
+              <CheckCircle2 className="h-6 w-6 " />,
               false
             )
           ) : (

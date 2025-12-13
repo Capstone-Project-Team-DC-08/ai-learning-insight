@@ -153,76 +153,76 @@ export default function StudentDashboard() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card className="border border-slate-200 shadow-sm bg-white">
+        <Card className="border border-slate-200 shadow-sm ">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-500 font-medium">
+                <p className="text-sm  font-medium">
                   Total Kelas
                 </p>
-                <p className="text-2xl font-semibold text-slate-900 mt-1">
+                <p className="text-2xl font-semibold  mt-1">
                   {stats.total}
                 </p>
               </div>
-              <div className="h-10 w-10 rounded-lg bg-slate-100 flex items-center justify-center">
-                <BookOpen className="h-5 w-5 text-slate-500" />
+              <div className="h-10 w-10 rounded-lg  flex items-center justify-center">
+                <BookOpen className="h-5 w-5 " />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border border-slate-200 shadow-sm bg-white">
+        <Card className="border border-slate-200 shadow-sm">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-500 font-medium">
+                <p className="text-sm  font-medium">
                   Sedang Dipelajari
                 </p>
-                <p className="text-2xl font-semibold text-slate-900 mt-1">
+                <p className="text-2xl font-semibold  mt-1">
                   {stats.inProgress}
                 </p>
               </div>
-              <div className="h-10 w-10 rounded-lg bg-slate-100 flex items-center justify-center">
-                <Target className="h-5 w-5 text-slate-500" />
+              <div className="h-10 w-10 rounded-lg flex items-center justify-center">
+                <Target className="h-5 w-5 " />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border border-slate-200 shadow-sm bg-white">
+        <Card className="border border-slate-200 shadow-sm ">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-500 font-medium">
+                <p className="text-sm  font-medium">
                   Kelas Selesai
                 </p>
-                <p className="text-2xl font-semibold text-slate-900 mt-1">
+                <p className="text-2xl font-semibold  mt-1">
                   {stats.completed}
                 </p>
               </div>
-              <div className="h-10 w-10 rounded-lg bg-slate-100 flex items-center justify-center">
-                <Trophy className="h-5 w-5 text-slate-500" />
+              <div className="h-10 w-10 rounded-lg  flex items-center justify-center">
+                <Trophy className="h-5 w-5 " />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border border-slate-200 shadow-sm bg-white">
+        <Card className="border border-slate-200 shadow-sm ">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-500 font-medium">
+                <p className="text-sm  font-medium">
                   Completion Rate
                 </p>
-                <p className="text-2xl font-semibold text-slate-900 mt-1">
+                <p className="text-2xl font-semibold mt-1">
                   {stats.total > 0
                     ? Math.round((stats.completed / stats.total) * 100)
                     : 0}
                   %
                 </p>
               </div>
-              <div className="h-10 w-10 rounded-lg bg-slate-100 flex items-center justify-center">
-                <BarChart3 className="h-5 w-5 text-slate-500" />
+              <div className="h-10 w-10 rounded-lg  flex items-center justify-center">
+                <BarChart3 className="h-5 w-5 " />
               </div>
             </div>
           </CardContent>
@@ -236,18 +236,18 @@ export default function StudentDashboard() {
           {insightLoading ? (
             <Skeleton className="h-[280px] rounded-xl" />
           ) : insight ? (
-            <Card className="border border-slate-200 shadow-sm bg-white h-full">
+            <Card className="border border-slate-200 shadow-sm  h-full">
               <CardHeader className="pb-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <div className="h-8 w-8 rounded-lg bg-slate-100 flex items-center justify-center">
-                      <Sparkles className="h-4 w-4 text-slate-600" />
+                    <div className="h-8 w-8 rounded-lg flex items-center justify-center">
+                      <Sparkles className="h-4 w-4 " />
                     </div>
                     <div>
-                      <CardTitle className="text-base font-semibold text-slate-900">
+                      <CardTitle className="text-base font-semibold ">
                         Profil Belajar
                       </CardTitle>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs ">
                         Hasil analisis AI
                       </p>
                     </div>
@@ -256,7 +256,7 @@ export default function StudentDashboard() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="text-slate-500 hover:text-slate-900"
+                      className=" hover:text-slate-900"
                     >
                       Detail
                       <ChevronRight className="ml-1 h-4 w-4" />
@@ -268,14 +268,14 @@ export default function StudentDashboard() {
                 {/* Dual Display - Persona & Pace */}
                 <div className="grid grid-cols-2 gap-4">
                   {/* Persona */}
-                  <div className="bg-slate-50 rounded-xl p-4">
+                  <div className=" rounded-xl p-4">
                     <p className="text-xs text-slate-400 uppercase tracking-wider">
                       Persona
                     </p>
-                    <p className="text-base font-semibold text-slate-900 mt-1 capitalize">
+                    <p className="text-base font-semibold  mt-1 capitalize">
                       {insight.persona?.persona_label || "The Consistent"}
                     </p>
-                    <p className="text-xs text-slate-500 mt-1 line-clamp-2">
+                    <p className="text-xs  mt-1 line-clamp-2">
                       {insight.persona?.characteristics?.[0] ||
                         "Pola belajar yang konsisten"}
                     </p>
@@ -283,13 +283,13 @@ export default function StudentDashboard() {
 
                   {/* Pace */}
                   <div className="bg-slate-50 rounded-xl p-4">
-                    <p className="text-xs text-slate-400 uppercase tracking-wider">
+                    <p className="text-xs  uppercase tracking-wider">
                       Pace
                     </p>
-                    <p className="text-base font-semibold text-slate-900 mt-1 capitalize">
+                    <p className="text-base font-semibold  mt-1 capitalize">
                       {insight.pace?.pace_label || "Consistent Learner"}
                     </p>
-                    <p className="text-xs text-slate-500 mt-1 line-clamp-2">
+                    <p className="text-xs  mt-1 line-clamp-2">
                       {insight.pace?.insight?.slice(0, 60) ||
                         "Belajar dengan ritme konsisten"}
                       ...
@@ -299,8 +299,8 @@ export default function StudentDashboard() {
 
                 {/* Advice */}
                 {insight.advice?.advice_text && (
-                  <div className="bg-slate-50 rounded-xl p-4 border border-slate-100">
-                    <p className="text-xs text-slate-400 uppercase tracking-wider mb-1">
+                  <div className=" rounded-xl p-4 border border-slate-100">
+                    <p className="text-xs uppercase tracking-wider mb-1">
                       Rekomendasi
                     </p>
                     <ReactMarkdown >
@@ -311,22 +311,22 @@ export default function StudentDashboard() {
               </CardContent>
             </Card>
           ) : (
-            <Card className="border-2 border-dashed border-slate-200 bg-slate-50/50 h-full">
+            <Card className="border-2 border-dashed border-slate-200  h-full">
               <CardContent className="p-8 text-center flex flex-col items-center justify-center h-full">
-                <div className="w-14 h-14 rounded-xl bg-slate-100 flex items-center justify-center mx-auto mb-4">
-                  <Sparkles className="w-7 h-7 text-slate-400" />
+                <div className="w-14 h-14 rounded-xl  flex items-center justify-center mx-auto mb-4">
+                  <Sparkles className="w-7 h-7 " />
                 </div>
-                <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                <h3 className="text-lg font-semibold  mb-2">
                   Temukan Profil Belajarmu
                 </h3>
-                <p className="text-slate-500 text-sm mb-6 max-w-sm mx-auto">
+                <p className=" text-sm mb-6 max-w-sm mx-auto">
                   AI akan menganalisis pola belajar dan memberikan insight
                   personal.
                 </p>
                 <Button
                   onClick={handleGenerateInsight}
                   disabled={generating}
-                  className="bg-slate-900 hover:bg-slate-800"
+                  className=" "
                 >
                   {generating ? (
                     <>
@@ -422,58 +422,58 @@ export default function StudentDashboard() {
       {/* Quick Actions */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Link href="/student/profile" className="block">
-          <Card className="hover:bg-slate-50 transition-colors cursor-pointer border border-slate-200">
+          <Card className=" transition-colors cursor-pointer border border-slate-200">
             <CardContent className="p-4 flex items-center gap-3">
-              <div className="h-9 w-9 rounded-lg bg-slate-100 flex items-center justify-center">
-                <Sparkles className="h-4 w-4 text-slate-500" />
+              <div className="h-9 w-9 rounded-lg  flex items-center justify-center">
+                <Sparkles className="h-4 w-4 " />
               </div>
               <div>
-                <p className="font-medium text-sm text-slate-900">
+                <p className="font-medium text-sm ">
                   Profil Belajar
                 </p>
-                <p className="text-xs text-slate-500">Lihat insight AI</p>
+                <p className="text-xs ">Lihat insight AI</p>
               </div>
             </CardContent>
           </Card>
         </Link>
 
         <Link href="/student/my-courses" className="block">
-          <Card className="hover:bg-slate-50 transition-colors cursor-pointer border border-slate-200">
+          <Card className=" transition-colors cursor-pointer border border-slate-200">
             <CardContent className="p-4 flex items-center gap-3">
-              <div className="h-9 w-9 rounded-lg bg-slate-100 flex items-center justify-center">
-                <BookOpen className="h-4 w-4 text-slate-500" />
+              <div className="h-9 w-9 rounded-lg  flex items-center justify-center">
+                <BookOpen className="h-4 w-4 " />
               </div>
               <div>
-                <p className="font-medium text-sm text-slate-900">Kelas Saya</p>
-                <p className="text-xs text-slate-500">Lihat semua kelas</p>
+                <p className="font-medium text-sm ">Kelas Saya</p>
+                <p className="text-xs ">Lihat semua kelas</p>
               </div>
             </CardContent>
           </Card>
         </Link>
 
         <Link href="/courses" className="block">
-          <Card className="hover:bg-slate-50 transition-colors cursor-pointer border border-slate-200">
+          <Card className=" transition-colors cursor-pointer border border-slate-200">
             <CardContent className="p-4 flex items-center gap-3">
-              <div className="h-9 w-9 rounded-lg bg-slate-100 flex items-center justify-center">
-                <TrendingUp className="h-4 w-4 text-slate-500" />
+              <div className="h-9 w-9 rounded-lg flex items-center justify-center">
+                <TrendingUp className="h-4 w-4 " />
               </div>
               <div>
-                <p className="font-medium text-sm text-slate-900">Katalog</p>
-                <p className="text-xs text-slate-500">Jelajah kelas baru</p>
+                <p className="font-medium text-sm ">Katalog</p>
+                <p className="text-xs ">Jelajah kelas baru</p>
               </div>
             </CardContent>
           </Card>
         </Link>
 
         <Link href="/student/settings" className="block">
-          <Card className="hover:bg-slate-50 transition-colors cursor-pointer border border-slate-200">
+          <Card className=" transition-colors cursor-pointer border border-slate-200">
             <CardContent className="p-4 flex items-center gap-3">
-              <div className="h-9 w-9 rounded-lg bg-slate-100 flex items-center justify-center">
-                <Calendar className="h-4 w-4 text-slate-500" />
+              <div className="h-9 w-9 rounded-lg  flex items-center justify-center">
+                <Calendar className="h-4 w-4 " />
               </div>
               <div>
-                <p className="font-medium text-sm text-slate-900">Pengaturan</p>
-                <p className="text-xs text-slate-500">Kelola akun</p>
+                <p className="font-medium text-sm ">Pengaturan</p>
+                <p className="text-xs ">Kelola akun</p>
               </div>
             </CardContent>
           </Card>

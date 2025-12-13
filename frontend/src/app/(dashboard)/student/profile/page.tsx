@@ -147,10 +147,10 @@ export default function StudentProfilePage() {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-semibold text-slate-900">
+            <h2 className="text-lg font-semibold ">
               Profil Belajar
             </h2>
-            <p className="text-sm text-slate-500">
+            <p className="text-sm ">
               Hasil analisis AI berdasarkan aktivitas belajarmu
             </p>
           </div>
@@ -159,7 +159,7 @@ export default function StudentProfilePage() {
             size="sm"
             onClick={handleGenerateInsight}
             disabled={generating}
-            className="border-slate-200 text-slate-600 hover:bg-slate-50"
+            className="border-slate-200  "
           >
             {generating ? (
               <>
@@ -180,20 +180,20 @@ export default function StudentProfilePage() {
             {/* Dual Cards - Persona & Pace */}
             <div className="grid md:grid-cols-2 gap-4">
               {/* Persona Card */}
-              <Card className="border border-slate-200 bg-white">
+              <Card className="border border-slate-200 ">
                 <CardContent className="p-5">
                   <div className="flex items-start gap-4">
-                    <div className="h-11 w-11 rounded-lg bg-slate-100 flex items-center justify-center shrink-0">
-                      <PersonaIcon className="h-5 w-5 text-slate-600" />
+                    <div className="h-11 w-11 rounded-lg  flex items-center justify-center shrink-0">
+                      <PersonaIcon className="h-5 w-5 " />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+                      <p className="text-xs font-medium uppercase tracking-wider">
                         Persona
                       </p>
-                      <h3 className="text-base font-semibold text-slate-900 mt-1 capitalize">
+                      <h3 className="text-base font-semibold  mt-1 capitalize">
                         {insight.persona?.persona_label || "Balanced Learner"}
                       </h3>
-                      <p className="text-sm text-slate-500 mt-1.5">
+                      <p className="text-sm  mt-1.5">
                         {personaConfig[personaLabel]?.description ||
                           "Memiliki gaya belajar yang unik"}
                       </p>
@@ -209,7 +209,7 @@ export default function StudentProfilePage() {
                             .map((char, idx) => (
                               <span
                                 key={idx}
-                                className="px-2 py-0.5 bg-slate-50 text-slate-600 text-xs rounded"
+                                className="px-2 py-0.5   text-xs rounded"
                               >
                                 {char}
                               </span>
@@ -221,17 +221,17 @@ export default function StudentProfilePage() {
               </Card>
 
               {/* Pace Card */}
-              <Card className="border border-slate-200 bg-white">
+              <Card className="border border-slate-200 ">
                 <CardContent className="p-5">
                   <div className="flex items-start gap-4">
-                    <div className="h-11 w-11 rounded-lg bg-slate-100 flex items-center justify-center shrink-0">
-                      <PaceIcon className="h-5 w-5 text-slate-600" />
+                    <div className="h-11 w-11 rounded-lg  flex items-center justify-center shrink-0">
+                      <PaceIcon className="h-5 w-5 " />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-medium text-slate-400 uppercase tracking-wider">
                         Pace Belajar
                       </p>
-                      <h3 className="text-base font-semibold text-slate-900 mt-1 capitalize">
+                      <h3 className="text-base font-semibold mt-1 capitalize">
                         {insight.pace?.pace_label || "Consistent Learner"}
                       </h3>
                       <p className="text-sm text-slate-500 mt-1.5">
@@ -254,11 +254,11 @@ export default function StudentProfilePage() {
 
             {/* AI Advice */}
             {insight.advice?.advice_text && (
-              <Card className="border border-slate-200 bg-slate-50">
+              <Card className="border border-slate-200 ">
                 <CardContent className="p-5">
                   <div className="flex items-start gap-4">
-                    <div className="h-10 w-10 rounded-lg bg-white border border-slate-200 flex items-center justify-center shrink-0">
-                      <Lightbulb className="h-5 w-5 text-slate-500" />
+                    <div className="h-10 w-10 rounded-lg  border border-slate-200 flex items-center justify-center shrink-0">
+                      <Lightbulb className="h-5 w-5 " />
                     </div>
                     <div className="flex-1">
                       <p className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">
@@ -274,15 +274,15 @@ export default function StudentProfilePage() {
             )}
           </>
         ) : (
-          <Card className="border-2 border-dashed border-slate-200 bg-slate-50/50">
+          <Card className="border-2 border-dashed border-slate-200 ">
             <CardContent className="py-12 text-center">
               <div className="w-12 h-12 rounded-lg bg-slate-100 flex items-center justify-center mx-auto mb-4">
                 <Sparkles className="w-6 h-6 text-slate-400" />
               </div>
-              <h3 className="text-base font-semibold text-slate-900 mb-1">
+              <h3 className="text-base font-semibold mb-1">
                 Temukan Profil Belajarmu
               </h3>
-              <p className="text-slate-500 text-sm mb-5 max-w-xs mx-auto">
+              <p className=" text-sm mb-5 max-w-xs mx-auto">
                 AI akan menganalisis pola belajar dan memberikan insight
                 personal.
               </p>
@@ -290,7 +290,7 @@ export default function StudentProfilePage() {
                 onClick={handleGenerateInsight}
                 disabled={generating}
                 size="sm"
-                className="bg-slate-900 hover:bg-slate-800"
+                className=" "
               >
                 {generating ? (
                   <>
@@ -310,9 +310,9 @@ export default function StudentProfilePage() {
       </div>
 
       {/* Focus Time Section */}
-      <Card className="border border-slate-200 bg-white">
+      <Card className="border border-slate-200 ">
         <CardHeader className="pb-2">
-          <CardTitle className="text-base font-semibold text-slate-900">
+          <CardTitle className="text-base font-semibold ">
             Distribusi Waktu Belajar
           </CardTitle>
         </CardHeader>
@@ -322,32 +322,32 @@ export default function StudentProfilePage() {
               <FocusTimeChart data={focusTime?.distribution || []} />
             </div>
             <div className="flex-1">
-              <div className="bg-slate-50 rounded-lg p-4">
+              <div className=" rounded-lg p-4">
                 <div className="flex items-start gap-3">
-                  <Clock className="h-5 w-5 text-slate-400 mt-0.5 shrink-0" />
+                  <Clock className="h-5 w-5  mt-0.5 shrink-0" />
                   <div>
-                    <h4 className="font-medium text-slate-900 text-sm">
+                    <h4 className="font-medium text-sm">
                       Waktu Optimal
                     </h4>
                     {focusTime && focusTime.total_activities > 0 ? (
                       <>
-                        <p className="text-sm text-slate-600 mt-1">
+                        <p className="text-sm  mt-1">
                           Berdasarkan{" "}
                           <span className="font-medium">
                             {focusTime.total_activities} aktivitas
                           </span>{" "}
                           belajarmu, waktu paling efektif adalah{" "}
-                          <span className="font-medium text-slate-900">
+                          <span className="font-medium ">
                             {focusTime.optimal_period} (
                             {focusTime.optimal_time_range})
                           </span>
                         </p>
-                        <p className="text-xs text-slate-400 mt-2">
+                        <p className="text-xs mt-2">
                           Tip: Alokasikan materi yang lebih sulit di jam ini.
                         </p>
                       </>
                     ) : (
-                      <p className="text-sm text-slate-500 mt-1">
+                      <p className="text-sm  mt-1">
                         Belum ada data aktivitas belajar. Mulai belajar untuk
                         melihat pola waktu optimalmu.
                       </p>
@@ -361,9 +361,9 @@ export default function StudentProfilePage() {
       </Card>
 
       {/* Footer Info */}
-      <div className="bg-slate-50 rounded-lg p-4 border border-slate-100">
-        <p className="text-xs text-slate-400">
-          <span className="font-medium text-slate-500">
+      <div className=" rounded-lg p-4 border border-slate-100">
+        <p className="text-xs ">
+          <span className="font-medium ">
             Bagaimana ini dihitung?
           </span>{" "}
           AI menganalisis waktu belajar, kecepatan menyelesaikan materi,

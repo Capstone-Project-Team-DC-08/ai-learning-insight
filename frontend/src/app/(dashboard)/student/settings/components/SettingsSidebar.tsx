@@ -1,4 +1,5 @@
 // app/settings/_components/SettingsSidebar.tsx
+import { Moon } from 'lucide-react';
 import React from 'react'
 import { FaUser, FaBell, FaBrain, FaLock } from "react-icons/fa6";
 
@@ -11,6 +12,7 @@ export const SettingsSidebar = ({ activeTab, setActiveTab }: SettingsSidebarProp
   const menuItems = [
     { id: "profile", label: "Profile", icon: <FaUser /> },
     { id: "account", label: "Account", icon: <FaLock /> },
+    { id: "theme", label: "Tema", icon: <Moon /> },
   ];
 
   return (

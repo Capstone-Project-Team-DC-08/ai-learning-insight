@@ -1,96 +1,105 @@
-"use client"
+"use client";
 
-import React, { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Separator } from '@/components/ui/separator'
-import { toast } from 'sonner'
-import { AlertCircle, CheckCircle2 } from 'lucide-react'
+import React, { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { toast } from "sonner";
+import { AlertCircle, CheckCircle2 } from "lucide-react";
+import { getCookie } from "cookies-next";
 
 const AccountContent = () => {
-  const [isLoading, setIsLoading] = useState(false)
-  
+  const [isLoading, setIsLoading] = useState(false);
+
   // State untuk form input
-  const [currentPassword, setCurrentPassword] = useState("")
-  const [newPassword, setNewPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [enrolling, setEnrolling] = useState(false);
+
+  useEffect(() => {
+    const token = getCookie("token");
+    setEnrolling(!!token);
+  }, []);
 
   const handleUpdatePassword = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
+    e.preventDefault();
+    setIsLoading(true);
 
     // 1. Validasi Dasar Frontend
     if (newPassword.length < 6) {
-      toast.error("Password baru minimal 6 karakter")
-      setIsLoading(false)
-      return
+      toast.error("Password baru minimal 6 karakter");
+      setIsLoading(false);
+      return;
     }
 
     if (newPassword !== confirmPassword) {
-      toast.error("Konfirmasi password tidak cocok!")
-      setIsLoading(false)
-      return
+      toast.error("Konfirmasi password tidak cocok!");
+      setIsLoading(false);
+      return;
     }
 
     if (currentPassword === newPassword) {
-      toast.error("Password baru tidak boleh sama dengan password lama")
-      setIsLoading(false)
-      return
+      toast.error("Password baru tidak boleh sama dengan password lama");
+      setIsLoading(false);
+      return;
     }
 
     try {
       // 2. Kirim ke Backend
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/change-password`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include', // Penting untuk mengirim cookie/token auth
-        body: JSON.stringify({
-          currentPassword,
-          newPassword,
-        }),
-      })
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/users/change-password`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include", // Penting untuk mengirim cookie/token auth
+          body: JSON.stringify({
+            currentPassword,
+            newPassword,
+          }),
+        }
+      );
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (response.ok) {
         toast.success("Password berhasil diubah!", {
           description: "Silakan login ulang jika diperlukan.",
-          icon: <CheckCircle2 className="text-green-500" />
-        })
-        
+          icon: <CheckCircle2 className="text-green-500" />,
+        });
+
         // Reset form setelah sukses
-        setCurrentPassword("")
-        setNewPassword("")
-        setConfirmPassword("")
+        setCurrentPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
       } else {
         // Tampilkan error dari backend (misal: "Password lama salah")
         toast.error(data.message || "Gagal mengubah password", {
-            icon: <AlertCircle className="text-red-500" />
-        })
+          icon: <AlertCircle className="text-red-500" />,
+        });
       }
     } catch (error) {
-      console.error("Error changing password:", error)
-      toast.error("Terjadi kesalahan sistem")
+      console.error("Error changing password:", error);
+      toast.error("Terjadi kesalahan sistem");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div>
-        <h3 className="text-lg font-medium text-slate-900">Keamanan Akun</h3>
-        <p className="text-sm text-slate-500">
+        <h3 className="text-lg font-medium ">Keamanan Akun</h3>
+        <p className="text-sm ">
           Update password Anda secara berkala untuk menjaga keamanan akun.
         </p>
       </div>
       <Separator />
 
       <form onSubmit={handleUpdatePassword} className="space-y-4 max-w-xl">
-        
         {/* Input Password Lama */}
         <div className="grid gap-2">
           <Label htmlFor="current_password">Password Lama</Label>
@@ -129,21 +138,27 @@ const AccountContent = () => {
             onChange={(e) => setConfirmPassword(e.target.value)}
             placeholder="Ulangi password baru"
             required
-            className={newPassword && confirmPassword && newPassword !== confirmPassword ? "border-red-500 focus-visible:ring-red-500" : ""}
+            className={
+              newPassword && confirmPassword && newPassword !== confirmPassword
+                ? "border-red-500 focus-visible:ring-red-500"
+                : ""
+            }
           />
-          {newPassword && confirmPassword && newPassword !== confirmPassword && (
-            <p className="text-xs text-red-500">Password tidak cocok.</p>
-          )}
+          {newPassword &&
+            confirmPassword &&
+            newPassword !== confirmPassword && (
+              <p className="text-xs text-red-500">Password tidak cocok.</p>
+            )}
         </div>
 
         <div className="flex justify-end pt-4">
-          <Button type="submit" disabled={isLoading}>
+          <Button type="submit" disabled={isLoading || !enrolling}>
             {isLoading ? "Memproses..." : "Update Password"}
           </Button>
         </div>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default AccountContent
+export default AccountContent;

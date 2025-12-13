@@ -8,6 +8,7 @@ import { Separator } from '@/components/ui/separator'
 import { SettingsSidebar } from './components/SettingsSidebar'
 import { ProfileContent } from './components/ProfileContent'
 import AccountContent from './components/AccountContent'
+import ThemeContent from './components/ThemeContent'
 
 
 const SettingPages = () => {
@@ -18,8 +19,8 @@ const SettingPages = () => {
       
       {/* Header Halaman */}
       <div>
-        <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Settings</h1>
-        <p className="text-slate-500 mt-2">Kelolah pengaturan akun anda.</p>
+        <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
+        <p className=" mt-2">Kelolah pengaturan akun anda.</p>
       </div>
 
       <Separator className="my-6" />
@@ -35,6 +36,8 @@ const SettingPages = () => {
 
           {/* Fallback untuk tab Account yang belum ada isinya */}
           {activeTab === "account" && <AccountContent />}
+
+          {activeTab === "theme" && <ThemeContent />}
         </main>
         
       </div>
