@@ -51,11 +51,10 @@ export default function Sidebar() {
   const router = useRouter();
   const [enrolling, setEnrolling] = useState(false);
 
-    useEffect(() => {
+  useEffect(() => {
     const token = getCookie("token");
     setEnrolling(!!token);
   }, []);
-
 
   const onLogout = () => {
     deleteCookie("token");
@@ -119,7 +118,14 @@ export default function Sidebar() {
 
       {/* Logout */}
       <div className="mt-4 border-t pt-4">
-        {enrolling ? (
+        {!enrolling ? (
+          <>
+            <Button className="flex w-full justify-center gap-2 px-2.5 py-2.5 text-sm ">
+              <LogIn className="mr-2 h-4 w-4" />
+              <Link href={"/login"}>Masuk</Link>
+            </Button>
+          </>
+        ) : (
           <>
             <Button
               variant="ghost"
@@ -128,15 +134,6 @@ export default function Sidebar() {
             >
               <LogOut className="mr-2 h-4 w-4" />
               Keluar
-            </Button>
-          </>
-        ) : (
-          <>
-            <Button
-              className="flex w-full justify-center gap-2 px-2.5 py-2.5 text-sm "
-            >
-              <LogIn className="mr-2 h-4 w-4" />
-               <Link href={"/login"} >Masuk</Link>
             </Button>
           </>
         )}

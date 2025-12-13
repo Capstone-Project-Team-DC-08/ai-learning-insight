@@ -83,7 +83,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex h-screen w-full items-center justify-center bg-slate-50 px-4">
+    <div className="flex h-screen w-full items-center justify-center px-4">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center">
@@ -149,7 +149,7 @@ export default function LoginPage() {
             </form>
           </Form>
 
-          <div className="mt-4 text-center text-sm text-slate-500">
+          <div className="mt-4 text-center text-sm ">
             Belum punya akun?{" "}
             <Link
               href="/register"
