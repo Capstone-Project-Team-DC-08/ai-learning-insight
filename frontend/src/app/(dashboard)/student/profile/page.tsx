@@ -5,15 +5,9 @@ import {
   RefreshCw,
   Zap,
   Sparkles,
-  Clock,
   BookOpen,
-  Target,
-  Moon,
-  Flame,
-  Brain,
   TrendingUp,
   Lightbulb,
-  AlertCircle,
 } from "lucide-react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
@@ -22,8 +16,9 @@ import api from "@/lib/axios";
 import { AIInsight } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge";
 import FocusTimeChart from "./fokusTime";
+import ProfileContentSkeleton from "@/components/skeleton/ProfileContentSkeleton";
 
 type FocusTimeData = {
   distribution: { name: string; value: number; count: number }[];
@@ -32,46 +27,27 @@ type FocusTimeData = {
   total_activities: number;
 };
 
-// Persona Configuration
-const personaConfig: Record<
+const paceConfig: Record<
   string,
-  { icon: typeof Flame; description: string }
+  { icon: typeof Zap; description: string; tip: string; color: string }
 > = {
-  "the sprinter": {
-    icon: Flame,
-    description: "Belajar intensif dalam waktu singkat dengan fokus tinggi",
-  },
-  "the night owl": {
-    icon: Moon,
-    description: "Paling produktif belajar di malam hari",
-  },
-  "the deep diver": {
-    icon: Brain,
-    description: "Mendalami materi secara komprehensif dan detail",
-  },
-  "the consistent": {
-    icon: Target,
-    description: "Memiliki pola belajar yang konsisten dan teratur setiap hari",
-  },
-  "the struggler": {
-    icon: AlertCircle,
-    description: "Masih mencari ritme belajar yang tepat, butuh dukungan lebih",
-  },
-};
-
-// Pace Configuration
-const paceConfig: Record<string, { icon: typeof Zap; description: string }> = {
   "fast learner": {
     icon: Zap,
-    description: "Menyelesaikan materi dengan cepat dan efisien",
+    description: "Kamu belajar dengan cepat dan efisien",
+    tip: "Coba tantang diri dengan materi yang lebih kompleks",
+    color: "text-primary",
   },
   "consistent learner": {
     icon: TrendingUp,
-    description: "Belajar dengan ritme stabil dan konsisten",
+    description: "Kamu belajar dengan ritme stabil dan konsisten",
+    tip: "Pertahankan rutinitas belajarmu yang sudah baik",
+    color: "text-primary",
   },
   "reflective learner": {
     icon: BookOpen,
-    description: "Meluangkan waktu untuk memahami secara mendalam",
+    description: "Kamu meluangkan waktu untuk memahami secara mendalam",
+    tip: "Buat catatan atau mind map untuk memperkuat pemahaman",
+    color: "text-primary",
   },
 };
 
@@ -117,22 +93,19 @@ export default function StudentProfilePage() {
       toast.success("Analisis Selesai!", {
         description: "AI telah memperbarui profil belajarmu.",
       });
-    } catch (error: any) {
+    } catch (error) {
+      const err = error as { response?: { data?: { message?: string } } };
       toast.error("Gagal Menganalisis", {
-        description: error.response?.data?.message || "Terjadi kesalahan.",
+        description: err.response?.data?.message || "Terjadi kesalahan.",
       });
     } finally {
       setGenerating(false);
     }
   };
 
-  const personaLabel =
-    insight?.persona?.persona_label?.toLowerCase() || "the consistent";
   const paceLabel =
     insight?.pace?.pace_label?.toLowerCase() || "consistent learner";
 
-  const PersonaIcon =
-    personaConfig[personaLabel]?.icon || personaConfig["the consistent"].icon;
   const PaceIcon =
     paceConfig[paceLabel]?.icon || paceConfig["consistent learner"].icon;
 
@@ -142,263 +115,199 @@ export default function StudentProfilePage() {
 
   return (
     <div className="space-y-6">
-      {/* Learning Profile Section */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
+      {/* Section Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
           <div>
-            <h2 className="text-lg font-semibold ">Profil Belajar</h2>
-            <p className="text-sm ">
-              Hasil analisis AI berdasarkan aktivitas belajarmu
+            <h2 className="text-lg font-semibold">Profil Belajar</h2>
+            <p className="text-sm text-muted-foreground">
+              Analisis berdasarkan aktivitas belajarmu
             </p>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleGenerateInsight}
-            disabled={generating}
-            className="border-slate-200  "
-          >
-            {generating ? (
-              <>
-                <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
-                Menganalisis...
-              </>
-            ) : (
-              <>
-                <RefreshCw className="mr-2 h-4 w-4" />
-                Perbarui
-              </>
-            )}
-          </Button>
         </div>
-
-        {insight ? (
-          <>
-            {/* Dual Cards - Persona & Pace */}
-            <div className="grid md:grid-cols-2 gap-4">
-              {/* Persona Card */}
-              <Card className="border border-slate-200 ">
-                <CardContent className="p-5">
-                  <div className="flex items-start gap-4">
-                    <div className="h-11 w-11 rounded-lg flex border border-slate-200 items-center justify-center shrink-0">
-                      <PersonaIcon className="h-5 w-5 " />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs font-medium uppercase tracking-wider">
-                        Karakteristik Siswa
-                      </p>
-                      <h3 className="text-base font-semibold  mt-1 capitalize">
-                        {insight.persona?.persona_label || "Balanced Learner"}
-                      </h3>
-                      <p className="text-sm  mt-1.5">
-                        {personaConfig[personaLabel]?.description ||
-                          "Memiliki gaya belajar yang unik"}
-                      </p>
-                    </div>
-                  </div>
-
-                  {insight.persona?.characteristics &&
-                    insight.persona.characteristics.length > 0 && (
-                      <div className="mt-4 pt-4 border-t border-slate-100">
-                        <div className="flex flex-wrap gap-1.5">
-                          {insight.persona.characteristics
-                            .slice(0, 3)
-                            .map((char, idx) => (
-                              <span
-                                key={idx}
-                                className="px-2 py-0.5   text-xs rounded"
-                              >
-                                {char}
-                              </span>
-                            ))}
-                        </div>
-                      </div>
-                    )}
-                </CardContent>
-              </Card>
-
-              {/* Pace Card */}
-              <Card className="border border-slate-200 ">
-                <CardContent className="p-5">
-                  <div className="flex items-start gap-4">
-                    <div className="h-11 w-11 rounded-lg border border-slate-200 flex items-center justify-center shrink-0">
-                      <PaceIcon className="h-5 w-5 " />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs font-medium  uppercase tracking-wider">
-                        Kebiasaan Belajar
-                      </p>
-                      <h3 className="text-base font-semibold mt-1 capitalize">
-                        {insight.pace?.pace_label || "Consistent Learner"}
-                      </h3>
-                      <p className="text-sm  mt-1.5">
-                        {paceConfig[paceLabel]?.description ||
-                          "Belajar dengan ritme yang sesuai"}
-                      </p>
-                    </div>
-                  </div>
-
-                  {insight.pace?.insight && (
-                    <div className="mt-4 pt-4 border-t border-slate-100">
-                      <p className="text-sm ">{insight.pace.insight}</p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* AI Advice */}
-            {insight.advice?.advice_text && (
-              <Card className="border border-slate-200 ">
-                <CardContent className="p-5">
-                  <div className="flex items-start gap-4">
-                    <div className="h-10 w-10 rounded-lg border border-slate-200 flex items-center justify-center shrink-0">
-                      <Lightbulb className="h-5 w-5 " />
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-xs font-medium uppercase tracking-wider mb-2">
-                        Rekomendasi AI
-                      </p>
-                      <div
-                        className="
-                          prose prose-sm max-w-none
-                          prose-neutral
-                          dark:prose-invert
-                          prose-p:my-1.5
-                          prose-p:leading-relaxed
-                          prose-ul:my-2
-                          prose-li:my-0.5
-                          prose-headings:font-semibold
-                          prose-h3:text-sm
-                          prose-h4:text-sm
-                        "
-                      >
-                        <ReactMarkdown>
-                          {insight.advice.advice_text}
-                        </ReactMarkdown>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-          </>
-        ) : (
-          <Card className="border-2 border-dashed border-slate-200 ">
-            <CardContent className="py-12 text-center">
-              <div className="w-12 h-12 rounded-lg  flex items-center justify-center mx-auto mb-4">
-                <Sparkles className="w-6 h-6 " />
-              </div>
-              <h3 className="text-base font-semibold mb-1">
-                Temukan Profil Belajarmu
-              </h3>
-              <p className=" text-sm mb-5 max-w-xs mx-auto">
-                AI akan menganalisis pola belajar dan memberikan insight
-                personal.
-              </p>
-              <Button
-                onClick={handleGenerateInsight}
-                disabled={generating}
-                size="sm"
-                className=" "
-              >
-                {generating ? (
-                  <>
-                    <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
-                    Menganalisis...
-                  </>
-                ) : (
-                  <>
-                    <Zap className="mr-2 h-4 w-4" />
-                    Mulai Analisis
-                  </>
-                )}
-              </Button>
-            </CardContent>
-          </Card>
-        )}
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handleGenerateInsight}
+          disabled={generating}
+        >
+          {generating ? (
+            <>
+              <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+              Menganalisis...
+            </>
+          ) : (
+            <>
+              <RefreshCw className="mr-2 h-4 w-4" />
+              Perbarui
+            </>
+          )}
+        </Button>
       </div>
 
-      {/* Focus Time Section */}
-      <Card className="border border-slate-200 ">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-base font-semibold ">
-            Distribusi Waktu Belajar
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col md:flex-row items-center gap-6">
-            <div className="w-full md:w-64">
-              <FocusTimeChart data={focusTime?.distribution || []} />
-            </div>
-            <div className="flex-1">
-              <div className=" rounded-lg p-4">
-                <div className="flex items-start gap-3">
-                  <Clock className="h-5 w-5  mt-0.5 shrink-0" />
+      {insight ? (
+        <div className="space-y-4">
+          {/* Learning Type Card */}
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex flex-col md:flex-row md:items-center gap-6">
+                {/* Icon & Label */}
+                <div className="flex items-center gap-4">
+                  <div className="h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center">
+                    <PaceIcon className="h-8 w-8 text-primary" />
+                  </div>
                   <div>
-                    <h4 className="font-medium text-sm">Waktu Optimal</h4>
+                    <Badge variant="secondary" className="mb-2">
+                      Tipe Belajar
+                    </Badge>
+                    <h3 className="text-2xl font-bold capitalize">
+                      {insight.pace?.pace_label || "Consistent Learner"}
+                    </h3>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {paceConfig[paceLabel]?.description ||
+                        "Belajar dengan ritme yang sesuai"}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Stats Grid */}
+                <div className="flex-1 grid grid-cols-3 gap-3 md:ml-auto md:max-w-sm">
+                  <div className="text-center p-3 rounded-xl bg-muted/50">
+                    <p className="text-xs text-muted-foreground">
+                      Waktu Optimal
+                    </p>
+                    <p className="font-semibold text-sm mt-0.5">
+                      {insight.features?.optimal_study_time || "Pagi"}
+                    </p>
+                  </div>
+                  <div className="text-center p-3 rounded-xl bg-muted/50">
+                    <p className="text-xs text-muted-foreground">Kelas Aktif</p>
+                    <p className="font-semibold text-sm mt-0.5">
+                      {insight.features?.total_courses_enrolled || 0}
+                    </p>
+                  </div>
+                  <div className="text-center p-3 rounded-xl bg-muted/50">
+                    <p className="text-xs text-muted-foreground">
+                      Rata-rata Skor Ujian
+                    </p>
+                    <p className="font-semibold text-sm mt-0.5">
+                      {insight.features?.avg_exam_score?.toFixed(0) || 0}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Tip */}
+              {paceConfig[paceLabel]?.tip && (
+                <div className="mt-5 p-4 bg-primary/5 border border-primary/10 rounded-xl">
+                  <p className="text-sm">
+                    <Lightbulb className="h-4 w-4 inline mr-2 text-primary" />
+                    <span className="font-medium">Tip:</span>{" "}
+                    {paceConfig[paceLabel].tip}
+                  </p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* AI Recommendation */}
+          {insight.advice?.advice_text && (
+            <Card>
+              <div className="flex items-center gap-3 px-6">
+                <CardTitle className="text-base font-semibold">
+                  Rekomendasi AI
+                </CardTitle>
+              </div>
+              <CardContent className="pt-0">
+                <div className="prose prose-sm max-w-none prose-neutral dark:prose-invert prose-p:my-2 prose-p:leading-relaxed prose-ul:my-2 prose-li:my-0.5 prose-headings:font-semibold">
+                  <ReactMarkdown>{insight.advice.advice_text}</ReactMarkdown>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Focus Time Chart */}
+          <Card>
+            <CardHeader className="pb-3">
+              <div className="flex items-center gap-3">
+                <CardTitle className="text-base font-semibold">
+                  Distribusi Waktu Belajar
+                </CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col md:flex-row items-center gap-6">
+                <div className="w-full md:w-56">
+                  <FocusTimeChart data={focusTime?.distribution || []} />
+                </div>
+                <div className="flex-1 space-y-4">
+                  <div className="p-4 rounded-xl bg-muted/50">
+                    <h4 className="font-medium mb-2 flex items-center gap-2">
+                      Waktu Optimal
+                    </h4>
                     {focusTime && focusTime.total_activities > 0 ? (
-                      <>
-                        <p className="text-sm  mt-1">
-                          Berdasarkan{" "}
-                          <span className="font-medium">
-                            {focusTime.total_activities} aktivitas
-                          </span>{" "}
-                          belajarmu, waktu paling efektif adalah{" "}
-                          <span className="font-medium ">
-                            {focusTime.optimal_period} (
-                            {focusTime.optimal_time_range})
-                          </span>
-                        </p>
-                        <p className="text-xs mt-2">
-                          Tip: Alokasikan materi yang lebih sulit di jam ini.
-                        </p>
-                      </>
+                      <p className="text-sm text-muted-foreground">
+                        Berdasarkan{" "}
+                        <span className="font-medium text-foreground">
+                          {focusTime.total_activities} aktivitas
+                        </span>{" "}
+                        belajarmu, waktu paling efektif adalah{" "}
+                        <span className="font-medium text-foreground">
+                          {focusTime.optimal_period} (
+                          {focusTime.optimal_time_range})
+                        </span>
+                      </p>
                     ) : (
-                      <p className="text-sm  mt-1">
-                        Belum ada data aktivitas belajar. Mulai belajar untuk
-                        melihat pola waktu optimalmu.
+                      <p className="text-sm text-muted-foreground">
+                        Belum ada data aktivitas. Mulai belajar untuk melihat
+                        pola waktu optimalmu.
                       </p>
                     )}
                   </div>
                 </div>
               </div>
+            </CardContent>
+          </Card>
+        </div>
+      ) : (
+        <Card className="border-2 border-dashed">
+          <CardContent className="py-16 text-center">
+            <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-5">
+              <Sparkles className="w-8 h-8 text-primary" />
             </div>
-          </div>
-        </CardContent>
-      </Card>
+            <h3 className="text-xl font-semibold mb-2">
+              Temukan Profil Belajarmu
+            </h3>
+            <p className="text-muted-foreground text-sm mb-6 max-w-sm mx-auto">
+              AI akan menganalisis pola belajar dan memberikan rekomendasi
+              personal untuk meningkatkan efektivitas belajarmu.
+            </p>
+            <Button
+              onClick={handleGenerateInsight}
+              disabled={generating}
+              size="lg"
+            >
+              {generating ? (
+                <>
+                  <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                  Menganalisis...
+                </>
+              ) : (
+                <>
+                  <Zap className="mr-2 h-4 w-4" />
+                  Mulai Analisis AI
+                </>
+              )}
+            </Button>
+          </CardContent>
+        </Card>
+      )}
 
-      {/* Footer Info */}
-      <div className=" rounded-lg p-4 border border-slate-100">
-        <p className="text-xs text-black/50 dark:text-white/50">
-          <span className="font-semibold">Bagaimana ini dihitung?</span> AI
-          menganalisis waktu belajar, kecepatan menyelesaikan materi,
-          konsistensi jadwal, dan performa quiz untuk mengidentifikasi profil
-          belajarmu.
-        </p>
-      </div>
-    </div>
-  );
-}
-
-function ProfileContentSkeleton() {
-  return (
-    <div className="space-y-6">
-      <div className="space-y-4">
-        <div className="flex justify-between">
-          <div className="space-y-1">
-            <Skeleton className="h-6 w-32" />
-            <Skeleton className="h-4 w-56" />
-          </div>
-          <Skeleton className="h-9 w-28" />
-        </div>
-        <div className="grid md:grid-cols-2 gap-4">
-          <Skeleton className="h-40 rounded-xl" />
-          <Skeleton className="h-40 rounded-xl" />
-        </div>
-        <Skeleton className="h-24 rounded-xl" />
-      </div>
-      <Skeleton className="h-64 rounded-xl" />
+      {/* Footer */}
+      <p className="text-xs text-center text-muted-foreground pt-2">
+        AI menganalisis waktu belajar, kecepatan, dan konsistensi untuk
+        mengidentifikasi profil belajarmu.
+      </p>
     </div>
   );
 }

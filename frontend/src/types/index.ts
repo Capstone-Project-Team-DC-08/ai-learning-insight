@@ -77,21 +77,28 @@ export interface CompletionResponse {
 
 export interface AIInsight {
   generated_at: string;
-  persona: {
+  persona?: {
     cluster_id: number;
     persona_label: string;
     confidence: number;
     characteristics: string[];
   };
-  pace: {
+  pace?: {
     pace_label: string;
-    pace_percentage: number;
+    confidence?: number;
     insight: string;
-    journey_name?: string;
   };
-  advice: {
+  advice?: {
     advice_text: string;
     user_id: number;
+  };
+  features?: {
+    optimal_study_time?: string;
+    total_courses_enrolled?: number;
+    courses_completed?: number;
+    completed_modules?: number;
+    total_modules_viewed?: number;
+    avg_exam_score?: number;
   };
 }
 

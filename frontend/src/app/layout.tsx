@@ -4,8 +4,8 @@ import { Toaster } from "@/components/ui/sonner"; // <--- Import ini
 import { ThemeProvider } from "@/components/ui/theme-provider";
 
 export const metadata: Metadata = {
-  title: "LMS Coding Platform",
-  description: "Belajar coding dengan AI Learning Path",
+  title: "Pacu Pintar",
+  description: "Platform belajar dengan AI Learning Path",
 };
 
 export default function RootLayout({

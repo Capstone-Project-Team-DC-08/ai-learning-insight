@@ -13,11 +13,6 @@ export const ProfileTabs = () => {
       href: "/student/profile",
       icon: Clock,
     },
-    {
-      label: "Weekly Activity",
-      href: "/student/profile/weekly-activity",
-      icon: Activity,
-    },
   ];
 
   return (

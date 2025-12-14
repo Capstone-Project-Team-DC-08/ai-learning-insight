@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
-  PlayCircle,
   CheckCircle2,
   BookOpen,
   Clock,
@@ -12,20 +11,23 @@ import {
   GraduationCap,
   Target,
   Sparkles,
+  ChevronRight,
+  Trophy,
 } from "lucide-react";
 
 import api from "@/lib/axios";
 import { Course } from "@/types";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge";
+import MyCoursesPageSkeleton from "@/components/skeleton/MyCoursesPageSkeleton";
 
 const difficultyConfig: Record<string, { label: string; color: string }> = {
-  beginner: { label: "Pemula", color: "text-emerald-600 bg-emerald-50" },
-  intermediate: { label: "Menengah", color: "text-amber-600 bg-amber-50" },
-  advanced: { label: "Lanjutan", color: "text-rose-600 bg-rose-50" },
+  beginner: { label: "Pemula", color: "bg-primary/10 text-primary" },
+  intermediate: { label: "Menengah", color: "bg-primary/10 text-primary" },
+  advanced: { label: "Lanjutan", color: "bg-primary/10 text-primary" },
 };
 
 export default function MyCoursesPage() {
@@ -63,80 +65,76 @@ export default function MyCoursesPage() {
     const isStarted = progress > 0;
     const difficulty = difficultyConfig[course.difficulty] || {
       label: "Umum",
-      color: "text-slate-600 bg-slate-50",
+      color: "bg-muted text-muted-foreground",
     };
 
     return (
       <Link key={course.id} href={`/courses/${course.id}`} className="group">
-        <Card className="h-full overflow-hidden border border-slate-200 transition-all duration-200 hover:shadow-lg hover:border-slate-300">
+        <Card className="h-full overflow-hidden border hover:shadow-md transition-all duration-200">
           {/* Image */}
-          <div className="relative aspect-video w-full overflow-hidden">
+          <div className="relative aspect-video w-full overflow-hidden bg-muted">
             {course.image_path ? (
               <Image
                 src={course.image_path}
                 alt={course.name}
                 fill
-                className="object-cover object-center transition-transform duration-300 group-hover:scale-105 w-full h-full"
+                className="object-cover transition-transform duration-300 group-hover:scale-105"
               />
             ) : (
               <div className="flex h-full w-full items-center justify-center">
-                <BookOpen className="h-10 w-10 " />
+                <BookOpen className="h-10 w-10 text-muted-foreground" />
               </div>
             )}
 
             {/* Status Badge */}
             {isCompleted && (
               <div className="absolute top-3 right-3">
-                <div className="flex items-center gap-1 px-2 py-1 bg-emerald-500  text-xs font-medium rounded-full">
-                  <CheckCircle2 className="w-3 h-3" />
+                <Badge className="bg-primary text-primary-foreground">
+                  <CheckCircle2 className="w-3 h-3 mr-1" />
                   Selesai
-                </div>
+                </Badge>
               </div>
             )}
           </div>
 
           <CardContent className="p-4">
-            {/* Difficulty Badge */}
-            <div className="flex items-center justify-between mb-2">
+            {/* Difficulty & Progress */}
+            <div className="flex items-center justify-between mb-3">
               <span
-                className={`text-[11px] font-medium px-2 py-0.5 rounded ${difficulty.color}`}
+                className={`text-xs font-medium px-2 py-1 rounded-md ${difficulty.color}`}
               >
                 {difficulty.label}
               </span>
               {isStarted && !isCompleted && (
-                <span className="text-xs ">
-                  {Math.round(progress)}% selesai
+                <span className="text-xs font-medium text-primary">
+                  {Math.round(progress)}%
                 </span>
               )}
             </div>
 
             {/* Title */}
-            <h3 className="font-semibold line-clamp-2 mb-3  transition-colors">
+            <h3 className="font-semibold line-clamp-2 mb-3 group-hover:text-primary transition-colors">
               {course.name}
             </h3>
 
-            {/* Progress Bar (for in-progress) */}
+            {/* Progress Bar */}
             {isStarted && !isCompleted && (
               <div className="mb-4">
                 <Progress value={progress} className="h-1.5" />
               </div>
             )}
 
-            {/* Action Button */}
-            <div
-              className={`flex items-center justify-between pt-3 border-t  ${
-                isStarted && !isCompleted ? "" : "mt-auto"
-              }`}
-            >
-              <span className="text-sm font-medium   transition-colors">
+            {/* Action */}
+            <div className="flex items-center justify-between pt-3 border-t">
+              <span className="text-sm font-medium text-muted-foreground group-hover:text-primary transition-colors">
                 {isCompleted
                   ? "Lihat Kelas"
                   : isStarted
                   ? "Lanjut Belajar"
                   : "Mulai Belajar"}
               </span>
-              <div className="h-8 w-8 rounded-full  flex items-center justify-center group-hover:bg-slate-900 transition-colors">
-                <ArrowRight className="h-4 w-4  group-hover:text-white transition-colors" />
+              <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center group-hover:bg-primary transition-colors">
+                <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary-foreground transition-colors" />
               </div>
             </div>
           </CardContent>
@@ -151,17 +149,17 @@ export default function MyCoursesPage() {
     showAction = true
   ) => (
     <div className="col-span-full">
-      <div className="flex flex-col items-center justify-center py-16 px-4  rounded-2xl border-2 border-dashed border-slate-200">
-        <div className="h-14 w-14 rounded-xl  flex items-center justify-center mb-4">
+      <div className="flex flex-col items-center justify-center py-16 px-4 rounded-2xl border-2 border-dashed bg-muted/20">
+        <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
           {icon}
         </div>
-        <p className=" font-medium mb-1">{message}</p>
-        <p className=" text-sm mb-5">
+        <p className="font-semibold mb-1">{message}</p>
+        <p className="text-muted-foreground text-sm mb-5">
           Temukan kelas yang sesuai dengan minatmu
         </p>
         {showAction && (
           <Link href="/courses">
-            <Button size="sm" className=" ">
+            <Button size="sm">
               <Sparkles className="h-4 w-4 mr-2" />
               Jelajah Kelas
             </Button>
@@ -175,12 +173,16 @@ export default function MyCoursesPage() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold ">Kelas Saya</h1>
-          <p className=" mt-1">Kelola dan pantau progress belajarmu</p>
+        <div className="flex items-center gap-3">
+          <div>
+            <h1 className="text-xl font-bold">Kelas Saya</h1>
+            <p className="text-sm text-muted-foreground">
+              Kelola dan pantau progress belajarmu
+            </p>
+          </div>
         </div>
         <Link href="/courses">
-          <Button className=" hover:bg-slate-800">
+          <Button>
             Jelajah Kelas Baru
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
@@ -188,110 +190,112 @@ export default function MyCoursesPage() {
       </div>
 
       {/* Stats Summary */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="border border-slate-200  p-5">
-          <div className="flex items-center gap-4">
-            <div className="h-10 w-10 rounded-lg flex items-center justify-center">
-              <BookOpen className="h-5 w-5 " />
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card className="border hover:shadow-md transition-all">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                <BookOpen className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold">{courses.length}</p>
+                <p className="text-xs text-muted-foreground">Total Kelas</p>
+              </div>
             </div>
-            <div>
-              <p className="text-2xl font-semibold ">{courses.length}</p>
-              <p className="text-xs ">Total Kelas</p>
-            </div>
-          </div>
+          </CardContent>
         </Card>
 
-        <Card className="border border-slate-200  p-5">
-          <div className="flex items-center gap-4">
-            <div className="h-10 w-10 rounded-lg flex items-center justify-center">
-              <Target className="h-5 w-5 " />
+        <Card className="border hover:shadow-md transition-all">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                <Target className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold">{inProgressCourses.length}</p>
+                <p className="text-xs text-muted-foreground">
+                  Sedang Dipelajari
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="text-2xl font-semibold ">
-                {inProgressCourses.length}
-              </p>
-              <p className="text-xs ">Sedang Dipelajari</p>
-            </div>
-          </div>
+          </CardContent>
         </Card>
 
-        <Card className="border border-slate-200  p-5">
-          <div className="flex items-center gap-4">
-            <div className="h-10 w-10 rounded-lg  flex items-center justify-center">
-              <GraduationCap className="h-5 w-5 " />
+        <Card className="border hover:shadow-md transition-all">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                <Trophy className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold">{completedCourses.length}</p>
+                <p className="text-xs text-muted-foreground">Selesai</p>
+              </div>
             </div>
-            <div>
-              <p className="text-2xl font-semibold ">
-                {completedCourses.length}
-              </p>
-              <p className="text-xs ">Selesai</p>
-            </div>
-          </div>
+          </CardContent>
         </Card>
 
-        <Card className="border border-slate-200  p-5">
-          <div className="flex items-center gap-4">
-            <div className="h-10 w-10 rounded-lg  flex items-center justify-center">
-              <Clock className="h-5 w-5 " />
+        <Card className="border hover:shadow-md transition-all">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                <Clock className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold">{notStartedCourses.length}</p>
+                <p className="text-xs text-muted-foreground">Belum Dimulai</p>
+              </div>
             </div>
-            <div>
-              <p className="text-2xl font-semibold ">
-                {notStartedCourses.length}
-              </p>
-              <p className="text-xs ">Belum Dimulai</p>
-            </div>
-          </div>
+          </CardContent>
         </Card>
       </div>
 
       {/* Tabs */}
       <Tabs defaultValue="all" className="w-full">
-        <div className="overflow-x-hidden">
-          <TabsList className="inline-flex h-auto p-1  rounded-lg w-auto min-w-full sm:min-w-0">
-            <TabsTrigger
-              value="all"
-              className="p-1 sm:px-3 sm:py-2 text-sm rounded-md data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm text-slate-600 dark:text-slate-100/50 whitespace-nowrap"
-            >
-              Semua
-              <span className="ml-1 sm:ml-1.5 text-xs  data-[state=active]:bg-slate-100 px-1.5 py-0.5 rounded">
-                {courses.length}
-              </span>
-            </TabsTrigger>
-            <TabsTrigger
-              value="in-progress"
-              className="p-1 sm:px-3 sm:py-2 text-sm rounded-md data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm text-slate-600 dark:text-slate-100/50 whitespace-nowrap"
-            >
-              Dipelajari
-              <span className="ml-1 sm:ml-1.5 text-xs  data-[state=active]:bg-slate-100 px-1.5 py-0.5 rounded">
-                {inProgressCourses.length}
-              </span>
-            </TabsTrigger>
-            <TabsTrigger
-              value="completed"
-              className="p-1 sm:px-3 sm:py-2 text-sm rounded-md data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm text-slate-600 dark:text-slate-100/50 whitespace-nowrap"
-            >
-              Selesai
-              <span className="ml-1 sm:ml-1.5 text-xs  data-[state=active]:bg-slate-100 px-1.5 py-0.5 rounded">
-                {completedCourses.length}
-              </span>
-            </TabsTrigger>
-            <TabsTrigger
-              value="not-started"
-              className="p-1 sm:px-3 sm:py-2 text-sm rounded-md data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm text-slate-600 dark:text-slate-100/50 whitespace-nowrap"
-            >
-              Belum Mulai
-              <span className="ml-1 sm:ml-1.5 text-xs  data-[state=active]:bg-slate-100 px-1.5 py-0.5 rounded">
-                {notStartedCourses.length}
-              </span>
-            </TabsTrigger>
-          </TabsList>
-        </div>
+        <TabsList className="h-auto p-1 bg-muted/50">
+          <TabsTrigger
+            value="all"
+            className="data-[state=active]:bg-background"
+          >
+            Semua
+            <Badge variant="secondary" className="ml-1.5 h-5 px-1.5 text-xs">
+              {courses.length}
+            </Badge>
+          </TabsTrigger>
+          <TabsTrigger
+            value="in-progress"
+            className="data-[state=active]:bg-background"
+          >
+            Dipelajari
+            <Badge variant="secondary" className="ml-1.5 h-5 px-1.5 text-xs">
+              {inProgressCourses.length}
+            </Badge>
+          </TabsTrigger>
+          <TabsTrigger
+            value="completed"
+            className="data-[state=active]:bg-background"
+          >
+            Selesai
+            <Badge variant="secondary" className="ml-1.5 h-5 px-1.5 text-xs">
+              {completedCourses.length}
+            </Badge>
+          </TabsTrigger>
+          <TabsTrigger
+            value="not-started"
+            className="data-[state=active]:bg-background"
+          >
+            Belum Mulai
+            <Badge variant="secondary" className="ml-1.5 h-5 px-1.5 text-xs">
+              {notStartedCourses.length}
+            </Badge>
+          </TabsTrigger>
+        </TabsList>
 
         <TabsContent value="all" className="mt-6">
           {courses.length === 0 ? (
             renderEmptyState(
               "Belum ada kelas yang diikuti",
-              <BookOpen className="h-6 w-6 " />
+              <BookOpen className="h-6 w-6 text-primary" />
             )
           ) : (
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -304,7 +308,7 @@ export default function MyCoursesPage() {
           {inProgressCourses.length === 0 ? (
             renderEmptyState(
               "Tidak ada kelas yang sedang dipelajari",
-              <Target className="h-6 w-6 " />
+              <Target className="h-6 w-6 text-primary" />
             )
           ) : (
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -317,7 +321,7 @@ export default function MyCoursesPage() {
           {completedCourses.length === 0 ? (
             renderEmptyState(
               "Belum ada kelas yang selesai",
-              <GraduationCap className="h-6 w-6 " />
+              <Trophy className="h-6 w-6 text-primary" />
             )
           ) : (
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -330,7 +334,7 @@ export default function MyCoursesPage() {
           {notStartedCourses.length === 0 ? (
             renderEmptyState(
               "Semua kelas sudah dimulai!",
-              <CheckCircle2 className="h-6 w-6 " />,
+              <CheckCircle2 className="h-6 w-6 text-primary" />,
               false
             )
           ) : (
@@ -340,45 +344,6 @@ export default function MyCoursesPage() {
           )}
         </TabsContent>
       </Tabs>
-    </div>
-  );
-}
-
-function MyCoursesPageSkeleton() {
-  return (
-    <div className="space-y-6 max-w-6xl mx-auto">
-      <div className="flex justify-between items-center">
-        <div className="space-y-2">
-          <Skeleton className="h-8 w-40" />
-          <Skeleton className="h-4 w-64" />
-        </div>
-        <Skeleton className="h-10 w-40" />
-      </div>
-
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {[...Array(4)].map((_, i) => (
-          <Skeleton key={i} className="h-24 rounded-xl" />
-        ))}
-      </div>
-
-      <Skeleton className="h-10 w-full max-w-xl" />
-
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {[...Array(6)].map((_, i) => (
-          <Card key={i} className="overflow-hidden border border-slate-200">
-            <Skeleton className="h-36 w-full rounded-none" />
-            <CardContent className="p-4 space-y-3">
-              <Skeleton className="h-4 w-16" />
-              <Skeleton className="h-5 w-full" />
-              <Skeleton className="h-5 w-3/4" />
-              <div className="flex justify-between pt-3 border-t border-slate-100">
-                <Skeleton className="h-4 w-24" />
-                <Skeleton className="h-8 w-8 rounded-full" />
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
     </div>
   );
 }

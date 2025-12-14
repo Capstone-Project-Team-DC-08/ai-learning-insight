@@ -76,7 +76,7 @@ export default function Sidebar() {
         </div>
         <div className="flex flex-col">
           <span className="text-sm font-semibold leading-none tracking-tight">
-            LMS Code
+            Pacu Pintar
           </span>
           <span className="text-xs ">Ruang belajar kamu</span>
         </div>

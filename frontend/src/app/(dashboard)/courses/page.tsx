@@ -3,35 +3,19 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Trophy } from "lucide-react";
+import { Trophy, BookOpen, ChevronRight, Sparkles } from "lucide-react";
 
 import api from "@/lib/axios";
 import { Course } from "@/types";
 
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
+import CourseCatalogSkeleton from "@/components/skeleton/CourseCatalogSkeleton";
 
-const difficultyConfig: Record<string, { label: string; className: string }> = {
-  beginner: {
-    label: "Pemula",
-    className: "border-emerald-200 bg-emerald-50 text-emerald-700",
-  },
-  intermediate: {
-    label: "Menengah",
-    className: "border-amber-200 bg-amber-50 text-amber-700",
-  },
-  advanced: {
-    label: "Lanjutan",
-    className: "border-red-200 bg-red-50 text-red-700",
-  },
+const difficultyConfig: Record<string, { label: string }> = {
+  beginner: { label: "Pemula" },
+  intermediate: { label: "Menengah" },
+  advanced: { label: "Lanjutan" },
 };
 
 export default function CourseCatalogPage() {
@@ -60,36 +44,31 @@ export default function CourseCatalogPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="space-y-1">
-          <h2 className="text-2xl font-semibold tracking-tight">
-            Jelajah Kelas
-          </h2>
-          <p className="text-sm ">
-            Temukan materi pembelajaran terbaik untuk mengembangkan karier
-            developermu.
-          </p>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-3">
+          <div>
+            <h1 className="text-xl font-bold">Jelajah Kelas</h1>
+            <p className="text-sm text-muted-foreground">
+              Temukan materi pembelajaran terbaik untuk mengembangkan skill dan
+              pengetahuanmu
+            </p>
+          </div>
         </div>
-        <div className="flex flex-wrap gap-2 text-xs ">
-          <span className="rounded-full bg-muted px-3 py-1">
-            ☕ Belajar fleksibel, kapan saja
-          </span>
-          <span className="hidden rounded-full bg-muted px-3 py-1 sm:inline">
-            🎯 Dapatkan XP dari setiap kelas
-          </span>
+        <div className="flex flex-wrap gap-2">
+          <Badge variant="secondary" className="rounded-full">
+            Belajar fleksibel, kapan saja
+          </Badge>
         </div>
       </div>
 
-      {/* Kalau belum ada course */}
+      {/* Empty State */}
       {courses.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border/80 bg-card/40 py-16 text-center">
-          <div className="mb-3 rounded-full bg-primary/5 px-3 py-1 text-xs font-medium text-primary">
-            Kelas belum tersedia
+        <div className="flex flex-col items-center justify-center py-16 px-4 rounded-2xl border-2 border-dashed bg-muted/20">
+          <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
+            <BookOpen className="h-6 w-6 text-primary" />
           </div>
-          <h3 className="text-base font-semibold tracking-tight">
-            Katalog kelas masih kosong
-          </h3>
-          <p className="mt-1 max-w-md text-sm ">
+          <p className="font-semibold mb-1">Katalog kelas masih kosong</p>
+          <p className="text-muted-foreground text-sm text-center max-w-md">
             Nantikan berbagai kelas seru yang akan segera hadir untuk menemani
             perjalanan belajarmu.
           </p>
@@ -97,125 +76,72 @@ export default function CourseCatalogPage() {
       ) : (
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {courses.map((course) => {
-            const diff =
-              difficultyConfig[course.difficulty || ""] ??
-              ({
-                label: course.difficulty || "Semua level",
-                className: "border-slate-200 bg-slate-50",
-              } as const);
+            const diff = difficultyConfig[course.difficulty || ""] ?? {
+              label: course.difficulty || "Semua level",
+            };
 
             return (
-              <Card
+              <Link
                 key={course.id}
-                className="flex h-full flex-col overflow-hidden border border-border/70 bg-card/70 transition-all hover:-translate-y-0.5 hover:shadow-md"
+                href={`/courses/${course.id}`}
+                className="group"
               >
-                {/* Cover Image */}
-                <div className="relative aspect-video w-full bg-muted">
-                  {course.image_path ? (
-                    <Image
-                      src={course.image_path}
-                      alt={course.name}
-                      fill
-                      className="object-cover"
-                    />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center text-xs ">
-                      Tidak ada gambar
-                    </div>
-                  )}
-                </div>
+                <Card className="h-full overflow-hidden border hover:shadow-md transition-all duration-200">
+                  {/* Cover Image */}
+                  <div className="relative aspect-video w-full bg-muted overflow-hidden">
+                    {course.image_path ? (
+                      <Image
+                        src={course.image_path}
+                        alt={course.name}
+                        fill
+                        className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center">
+                        <BookOpen className="h-10 w-10 text-muted-foreground" />
+                      </div>
+                    )}
+                  </div>
 
-                <CardHeader className="space-y-2 p-4 pb-3">
-                  <div className="flex items-start justify-between gap-2">
-                    <CardTitle className="line-clamp-2 text-base font-semibold leading-snug">
+                  <CardContent className="p-4">
+                    {/* Difficulty & XP */}
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-xs font-medium px-2 py-1 rounded-md bg-primary/10 text-primary">
+                        {diff.label}
+                      </span>
+                      <div className="flex items-center gap-1 text-xs font-medium text-muted-foreground">
+                        <Trophy className="h-3.5 w-3.5 text-primary" />
+                        <span>{course.point ?? 0} XP</span>
+                      </div>
+                    </div>
+
+                    {/* Title */}
+                    <h3 className="font-semibold line-clamp-2 mb-2 group-hover:text-primary transition-colors">
                       {course.name}
-                    </CardTitle>
-                    <Badge
-                      variant="outline"
-                      className={`whitespace-nowrap border text-[11px] font-medium ${diff.className}`}
-                    >
-                      {diff.label}
-                    </Badge>
-                  </div>
-                </CardHeader>
+                    </h3>
 
-                <CardContent className="flex-1 space-y-3 p-4 pt-1">
-                  <p className="mb-2 line-clamp-3 text-xs ">
-                    {course.summary ||
-                      "Belum ada deskripsi singkat untuk kelas ini."}
-                  </p>
+                    {/* Summary */}
+                    <p className="text-xs text-muted-foreground line-clamp-2 mb-4">
+                      {course.summary ||
+                        "Belum ada deskripsi singkat untuk kelas ini."}
+                    </p>
 
-                  <div className="flex items-center justify-between text-[11px] font-medium ">
-                    <div className="flex items-center gap-1.5">
-                      <Trophy className="h-3.5 w-3.5 text-amber-500" />
-                      <span>{course.point ?? 0} XP</span>
+                    {/* Action */}
+                    <div className="flex items-center justify-between pt-3 border-t">
+                      <span className="text-sm font-medium text-muted-foreground group-hover:text-primary transition-colors">
+                        Lihat Detail
+                      </span>
+                      <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center group-hover:bg-primary transition-colors">
+                        <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary-foreground transition-colors" />
+                      </div>
                     </div>
-                    {/* Kalau nanti ada durasi / level lain, bisa ditaruh di sini */}
-                  </div>
-                </CardContent>
-
-                <CardFooter className="p-4 pt-0">
-                  <Link href={`/courses/${course.id}`} className="w-full">
-                    <Button className="w-full text-sm" variant="outline">
-                      Lihat Detail Kelas
-                    </Button>
-                  </Link>
-                </CardFooter>
-              </Card>
+                  </CardContent>
+                </Card>
+              </Link>
             );
           })}
         </div>
       )}
-    </div>
-  );
-}
-
-/* ============================= */
-/* 🔷 Skeleton Loading Component */
-/* ============================= */
-
-function CourseCatalogSkeleton() {
-  return (
-    <div className="space-y-6">
-      {/* Header skeleton */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="space-y-2">
-          <Skeleton className="h-6 w-40" />
-          <Skeleton className="h-4 w-64" />
-        </div>
-        <div className="flex gap-2">
-          <Skeleton className="h-7 w-32 rounded-full" />
-          <Skeleton className="hidden h-7 w-36 rounded-full sm:block" />
-        </div>
-      </div>
-
-      {/* Grid skeleton */}
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {Array.from({ length: 8 }).map((_, i) => (
-          <Card
-            key={i}
-            className="flex h-full flex-col overflow-hidden border border-border/70"
-          >
-            <Skeleton className="aspect-video w-full" />
-            <CardHeader className="space-y-2 p-4 pb-3">
-              <Skeleton className="h-4 w-3/4" />
-              <Skeleton className="h-5 w-20 rounded-full" />
-            </CardHeader>
-            <CardContent className="space-y-3 p-4 pt-1">
-              <Skeleton className="h-3 w-full" />
-              <Skeleton className="h-3 w-5/6" />
-              <Skeleton className="h-3 w-2/3" />
-              <div className="flex items-center justify-between pt-1">
-                <Skeleton className="h-3 w-16" />
-                <Skeleton className="h-3 w-12" />
-              </div>
-            </CardContent>
-            <CardFooter className="p-4 pt-0">
-              <Skeleton className="h-9 w-full rounded-md" />
-            </CardFooter>
-          </Card>
-        ))}
-      </div>
     </div>
   );
 }

@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
-  PlayCircle,
   BookOpen,
   Clock,
   Trophy,
@@ -16,38 +15,21 @@ import {
   Target,
   Calendar,
   BarChart3,
+  Flame,
 } from "lucide-react";
 import { toast } from "sonner";
-import ReactMarkdown from "react-markdown";
 
 import api from "@/lib/axios";
 import { Course, AIInsight } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge";
+import DashboardSkeleton from "@/components/skeleton/DashboardSkeleton";
 
 type User = {
   name: string;
-};
-
-type DashboardData = {
-  stats: {
-    total_courses: number;
-    completed_courses: number;
-    in_progress_courses: number;
-    total_study_hours: number;
-    avg_quiz_score: number;
-  };
-  recent_courses: Course[];
-  recent_activities: {
-    id: number;
-    type: string;
-    title: string;
-    course_name: string;
-    timestamp: string;
-  }[];
 };
 
 export default function StudentDashboard() {
@@ -57,6 +39,7 @@ export default function StudentDashboard() {
   const [loading, setLoading] = useState(true);
   const [insightLoading, setInsightLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
+  console.log(insight);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -97,17 +80,16 @@ export default function StudentDashboard() {
       toast.success("Analisis Selesai!", {
         description: "AI telah memperbarui profil belajar Anda.",
       });
-    } catch (error: any) {
+    } catch (error) {
+      const err = error as { response?: { data?: { message?: string } } };
       toast.error("Gagal Menganalisis", {
-        description: error.response?.data?.message || "Terjadi kesalahan.",
+        description: err.response?.data?.message || "Terjadi kesalahan.",
       });
-      console.log(error.message);
     } finally {
       setGenerating(false);
     }
   };
 
-  // Calculate stats from courses
   const stats = {
     total: courses.length,
     completed: courses.filter((c) => (c.progress || 0) === 100).length,
@@ -125,95 +107,121 @@ export default function StudentDashboard() {
   }
 
   return (
-    <div className="space-y-8">
-      {/* Welcome Section */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="space-y-1">
-          <h1 className="text-2xl font-semibold tracking-tight">
-            Selamat datang kembali, {user?.name || "Learner"}! 👋
-          </h1>
-          <p className="">
-            Pantau progress belajarmu dan temukan insight personal dari AI.
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <Link href="/student/my-courses">
-            <Button variant="outline" size="sm">
-              <BookOpen className="mr-2 h-4 w-4" />
-              Kelas Saya
-            </Button>
-          </Link>
-          <Link href="/courses">
-            <Button size="sm">
-              Jelajah Kelas
-              <ChevronRight className="ml-1 h-4 w-4" />
-            </Button>
-          </Link>
+    <div className="space-y-6">
+      {/* Welcome Banner */}
+      <div className="relative overflow-hidden rounded-2xl bg-linear-to-br from-primary/90 via-primary to-primary/80 p-6 md:p-8 text-primary-foreground">
+        <div className="absolute inset-0 bg-grid-white/10 mask-[linear-gradient(0deg,transparent,rgba(255,255,255,0.5))]" />
+        <div className="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
+        <div className="absolute -bottom-24 -left-24 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
+
+        <div className="relative flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <Badge
+                variant="secondary"
+                className="bg-white/20 text-white hover:bg-white/30 border-0 dark:bg-black/30"
+              >
+                Dashboard
+              </Badge>
+            </div>
+            <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
+              Selamat datang, {user?.name || "Learner"}! 👋
+            </h1>
+            <p className="text-primary-foreground/80 max-w-lg">
+              Pantau progress belajarmu dan temukan insight personal dari AI
+              untuk meningkatkan efektivitas belajar.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Link href="/student/my-courses">
+              <Button
+                variant="secondary"
+                size="sm"
+                className="bg-white/20 hover:bg-white/30 text-white border-0 backdrop-blur-sm dark:bg-black/20"
+              >
+                Kelas Saya
+              </Button>
+            </Link>
+            <Link href="/courses">
+              <Button
+                size="sm"
+                variant="secondary"
+                className="bg-white text-primary hover:bg-white/90 dark:bg-black"
+              >
+                Jelajah Kelas
+                <ChevronRight className="ml-1 h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card className="border border-slate-200 shadow-sm ">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card className="group border hover:shadow-md transition-all duration-200">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm  font-medium">Total Kelas</p>
-                <p className="text-2xl font-semibold  mt-1">{stats.total}</p>
-              </div>
-              <div className="h-10 w-10 rounded-lg  flex items-center justify-center">
-                <BookOpen className="h-5 w-5 " />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border border-slate-200 shadow-sm">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm  font-medium">Sedang Dipelajari</p>
-                <p className="text-2xl font-semibold  mt-1">
-                  {stats.inProgress}
+              <div className="space-y-1">
+                <p className="text-sm text-muted-foreground font-medium">
+                  Total Kelas
                 </p>
+                <p className="text-3xl font-bold">{stats.total}</p>
               </div>
-              <div className="h-10 w-10 rounded-lg flex items-center justify-center">
-                <Target className="h-5 w-5 " />
+              <div className="h-11 w-11 rounded-xl bg-primary/10 flex items-center justify-center">
+                <BookOpen className="h-5 w-5 text-primary" />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border border-slate-200 shadow-sm ">
+        <Card className="group border hover:shadow-md transition-all duration-200">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm  font-medium">Kelas Selesai</p>
-                <p className="text-2xl font-semibold  mt-1">
-                  {stats.completed}
+              <div className="space-y-1">
+                <p className="text-sm text-muted-foreground font-medium">
+                  Sedang Dipelajari
                 </p>
+                <p className="text-3xl font-bold">{stats.inProgress}</p>
               </div>
-              <div className="h-10 w-10 rounded-lg  flex items-center justify-center">
-                <Trophy className="h-5 w-5 " />
+              <div className="h-11 w-11 rounded-xl bg-primary/10 flex items-center justify-center">
+                <Target className="h-5 w-5 text-primary" />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border border-slate-200 shadow-sm ">
+        <Card className="group border hover:shadow-md transition-all duration-200">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm  font-medium">Completion Rate</p>
-                <p className="text-2xl font-semibold mt-1">
+              <div className="space-y-1">
+                <p className="text-sm text-muted-foreground font-medium">
+                  Kelas Selesai
+                </p>
+                <p className="text-3xl font-bold">{stats.completed}</p>
+              </div>
+              <div className="h-11 w-11 rounded-xl bg-primary/10 flex items-center justify-center">
+                <Trophy className="h-5 w-5 text-primary" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="group border hover:shadow-md transition-all duration-200">
+          <CardContent className="p-5">
+            <div className="flex items-center justify-between">
+              <div className="space-y-1">
+                <p className="text-sm text-muted-foreground font-medium">
+                  Completion Rate
+                </p>
+                <p className="text-3xl font-bold">
                   {stats.total > 0
                     ? Math.round((stats.completed / stats.total) * 100)
                     : 0}
                   %
                 </p>
               </div>
-              <div className="h-10 w-10 rounded-lg  flex items-center justify-center">
-                <BarChart3 className="h-5 w-5 " />
+              <div className="h-11 w-11 rounded-xl bg-primary/10 flex items-center justify-center">
+                <BarChart3 className="h-5 w-5 text-primary" />
               </div>
             </div>
           </CardContent>
@@ -225,99 +233,81 @@ export default function StudentDashboard() {
         {/* AI Insight Card - Takes 2 columns */}
         <div className="lg:col-span-2">
           {insightLoading ? (
-            <Skeleton className="h-[280px] rounded-xl" />
+            <Skeleton className="h-[260px] rounded-xl" />
           ) : insight ? (
-            <Card className="border border-slate-200 shadow-sm  h-full">
-              <CardHeader className="pb-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className="h-8 w-8 rounded-lg flex items-center justify-center">
-                      <Sparkles className="h-4 w-4 " />
+            <Card className="h-full border">
+              <CardContent className="p-6">
+                <div className="flex items-start justify-between mb-5">
+                  <div className="flex items-center gap-3">
+                    <div className="h-11 w-11 rounded-xl bg-primary/10 flex items-center justify-center">
+                      <Sparkles className="h-5 w-5 text-primary" />
                     </div>
                     <div>
-                      <CardTitle className="text-base font-semibold ">
-                        Profil Belajar
-                      </CardTitle>
-                      <p className="text-xs ">Hasil analisis AI</p>
+                      <h3 className="font-semibold text-lg">Profil Belajar</h3>
+                      <p className="text-sm text-muted-foreground">
+                        Analisis personal dari aktivitas belajarmu
+                      </p>
                     </div>
                   </div>
                   <Link href="/student/profile">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className=" hover:text-slate-900 dark:text-slate-100"
-                    >
-                      Detail
+                    <Button variant="outline" size="sm">
+                      Lihat Detail
                       <ChevronRight className="ml-1 h-4 w-4" />
                     </Button>
                   </Link>
                 </div>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {/* Dual Display - Persona & Pace */}
-                <div className="grid grid-cols-2 gap-4">
-                  {/* Persona */}
-                  <div className="border border-slate-100 rounded-xl p-4">
-                    <p className="text-xs  uppercase tracking-wider">
-                      Karakteristik
-                    </p>
-                    <p className="text-base font-semibold  mt-1 capitalize">
-                      {insight.persona?.persona_label || "The Consistent"}
-                    </p>
-                    <p className="text-xs text-slate-500 dark:text-white/75 mt-1 line-clamp-2">
-                      {insight.persona?.characteristics?.[0] ||
-                        "Pola belajar yang konsisten"}
-                    </p>
-                  </div>
 
-                  {/* Pace */}
-                  <div className="border border-slate-100 rounded-xl p-4">
-                    <p className="text-xs  uppercase tracking-wider">
-                      Kebiasaan
+                <div className="flex items-center gap-4 py-4 mb-4 border-t">
+                  <div className="flex-1">
+                    <p className="uppercase text-sm text-slate-600 font-light pb-3 dark:text-white">
+                      Tipe Belajar Anda
                     </p>
-                    <p className="text-base font-semibold  mt-1 capitalize">
+                    <p className="text-xl font-bold capitalize">
                       {insight.pace?.pace_label || "Consistent Learner"}
                     </p>
-                    <p className="text-xs text-slate-500 dark:text-white/75 mt-1 line-clamp-2">
-                      {insight.pace?.insight?.slice(0, 60) ||
-                        "Belajar dengan ritme konsisten"}
-                      ...
-                    </p>
+                    <div className="flex flex-wrap items-center gap-4 mt-1 text-sm text-muted-foreground">
+                      <div className="flex items-center gap-1.5">
+                        <Clock className="h-4 w-4" />
+                        <span>
+                          Waktu optimal:{" "}
+                          <strong className="text-foreground">
+                            {insight.features?.optimal_study_time || "Pagi"}
+                          </strong>
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <Trophy className="h-4 w-4" />
+                        <span>
+                          Rata-rata skor Ujian:{" "}
+                          <strong className="text-foreground">
+                            {insight.features?.avg_exam_score?.toFixed(0) || 0}
+                          </strong>
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                {/* Advice */}
-                {insight.advice?.advice_text && (
-                  <div className=" rounded-xl p-4 border border-slate-100">
-                    <p className="text-xs uppercase tracking-wider mb-1">
-                      Rekomendasi
-                    </p>
-                    <p className="text-xs text-slate-500 dark:text-white/75 mt-1 line-clamp-2">
-                      Halo {user?.name}, ketuk tombol detail untuk melihat
-                      rekomendasi personal dari Ai!
-                    </p>
-                  </div>
-                )}
+                <p className="text-sm text-muted-foreground leading-relaxed border-t pt-3">
+                  {insight.pace?.insight ||
+                    "Klik detail untuk melihat rekomendasi personal dari AI."}
+                </p>
               </CardContent>
             </Card>
           ) : (
-            <Card className="border-2 border-dashed border-slate-200  h-full">
-              <CardContent className="p-8 text-center flex flex-col items-center justify-center h-full">
-                <div className="w-14 h-14 rounded-xl  flex items-center justify-center mx-auto mb-4">
-                  <Sparkles className="w-7 h-7 " />
+            <Card className="h-full border-2 border-dashed">
+              <CardContent className="p-8 text-center flex flex-col items-center justify-center h-full min-h-[260px]">
+                <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                  <Sparkles className="w-8 h-8 text-primary" />
                 </div>
-                <h3 className="text-lg font-semibold  mb-2">
+                <h3 className="text-lg font-semibold mb-2">
                   Temukan Profil Belajarmu
                 </h3>
-                <p className=" text-sm mb-6 max-w-sm mx-auto">
-                  AI akan menganalisis pola belajar dan memberikan insight
+                <p className="text-muted-foreground text-sm mb-5 max-w-sm mx-auto">
+                  AI akan menganalisis pola belajar dan memberikan rekomendasi
                   personal.
                 </p>
-                <Button
-                  onClick={handleGenerateInsight}
-                  disabled={generating}
-                  className=" "
-                >
+                <Button onClick={handleGenerateInsight} disabled={generating}>
                   {generating ? (
                     <>
                       <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
@@ -337,7 +327,7 @@ export default function StudentDashboard() {
 
         {/* Continue Learning Card */}
         <div className="lg:col-span-1">
-          <Card className="h-full border-2 border-dashed border-slate-200 ">
+          <Card className="h-full border">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-base font-semibold">
@@ -352,12 +342,14 @@ export default function StudentDashboard() {
             </CardHeader>
             <CardContent className="space-y-3">
               {recentCourses.length === 0 ? (
-                <div className="text-center py-8">
-                  <BookOpen className="h-10 w-10  mx-auto mb-3" />
-                  <p className="text-sm ">
+                <div className="text-center py-6">
+                  <div className="h-12 w-12 rounded-xl bg-muted flex items-center justify-center mx-auto mb-3">
+                    <BookOpen className="h-6 w-6 text-muted-foreground" />
+                  </div>
+                  <p className="text-sm text-muted-foreground mb-3">
                     Belum ada kelas yang sedang dipelajari
                   </p>
-                  <Link href="/courses" className="mt-3 block">
+                  <Link href="/courses">
                     <Button variant="outline" size="sm">
                       Mulai Belajar
                     </Button>
@@ -370,8 +362,8 @@ export default function StudentDashboard() {
                     href={`/courses/${course.id}`}
                     className="block"
                   >
-                    <div className="flex gap-3 p-3 rounded-xl hover:bg-muted/50 transition-colors group">
-                      <div className="relative h-14 w-14 rounded-lg bg-muted overflow-hidden shrink-0">
+                    <div className="flex gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors group">
+                      <div className="relative h-12 w-12 rounded-lg bg-muted overflow-hidden shrink-0">
                         {course.image_path ? (
                           <Image
                             src={course.image_path}
@@ -381,7 +373,7 @@ export default function StudentDashboard() {
                           />
                         ) : (
                           <div className="flex items-center justify-center h-full">
-                            <BookOpen className="h-5 w-5 " />
+                            <BookOpen className="h-5 w-5 text-muted-foreground" />
                           </div>
                         )}
                       </div>
@@ -394,12 +386,12 @@ export default function StudentDashboard() {
                             value={course.progress || 0}
                             className="h-1.5 flex-1"
                           />
-                          <span className="text-xs  font-medium">
+                          <span className="text-xs font-medium text-muted-foreground">
                             {Math.round(course.progress || 0)}%
                           </span>
                         </div>
                       </div>
-                      <ChevronRight className="h-5 w-5  group-hover:text-primary shrink-0 self-center" />
+                      <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary shrink-0 self-center" />
                     </div>
                   </Link>
                 ))
@@ -410,96 +402,68 @@ export default function StudentDashboard() {
       </div>
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Link href="/student/profile" className="block">
-          <Card className=" transition-colors cursor-pointer border border-slate-200">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <Link href="/student/profile" className="block group">
+          <Card className="border hover:shadow-md transition-all duration-200">
             <CardContent className="p-4 flex items-center gap-3">
-              <div className="h-9 w-9 rounded-lg  flex items-center justify-center">
-                <Sparkles className="h-4 w-4 " />
+              <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                <Sparkles className="h-5 w-5 text-primary" />
               </div>
-              <div>
-                <p className="font-medium text-sm ">Profil Belajar</p>
-                <p className="text-xs ">Lihat insight AI</p>
+              <div className="flex-1 min-w-0">
+                <p className="font-medium text-sm">Profil Belajar</p>
+                <p className="text-xs text-muted-foreground">
+                  Lihat insight AI
+                </p>
               </div>
             </CardContent>
           </Card>
         </Link>
 
-        <Link href="/student/my-courses" className="block">
-          <Card className=" transition-colors cursor-pointer border border-slate-200">
+        <Link href="/student/my-courses" className="block group">
+          <Card className="border hover:shadow-md transition-all duration-200">
             <CardContent className="p-4 flex items-center gap-3">
-              <div className="h-9 w-9 rounded-lg  flex items-center justify-center">
-                <BookOpen className="h-4 w-4 " />
+              <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                <BookOpen className="h-5 w-5 text-primary" />
               </div>
-              <div>
-                <p className="font-medium text-sm ">Kelas Saya</p>
-                <p className="text-xs ">Lihat semua kelas</p>
+              <div className="flex-1 min-w-0">
+                <p className="font-medium text-sm">Kelas Saya</p>
+                <p className="text-xs text-muted-foreground">
+                  Lihat semua kelas
+                </p>
               </div>
             </CardContent>
           </Card>
         </Link>
 
-        <Link href="/courses" className="block">
-          <Card className=" transition-colors cursor-pointer border border-slate-200">
+        <Link href="/courses" className="block group">
+          <Card className="border hover:shadow-md transition-all duration-200">
             <CardContent className="p-4 flex items-center gap-3">
-              <div className="h-9 w-9 rounded-lg flex items-center justify-center">
-                <TrendingUp className="h-4 w-4 " />
+              <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                <TrendingUp className="h-5 w-5 text-primary" />
               </div>
-              <div>
-                <p className="font-medium text-sm ">Katalog</p>
-                <p className="text-xs ">Jelajah kelas baru</p>
+              <div className="flex-1 min-w-0">
+                <p className="font-medium text-sm">Katalog</p>
+                <p className="text-xs text-muted-foreground">
+                  Jelajah kelas baru
+                </p>
               </div>
             </CardContent>
           </Card>
         </Link>
 
-        <Link href="/student/settings" className="block">
-          <Card className=" transition-colors cursor-pointer border border-slate-200">
+        <Link href="/student/settings" className="block group">
+          <Card className="border hover:shadow-md transition-all duration-200">
             <CardContent className="p-4 flex items-center gap-3">
-              <div className="h-9 w-9 rounded-lg  flex items-center justify-center">
-                <Calendar className="h-4 w-4 " />
+              <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                <Calendar className="h-5 w-5 text-primary" />
               </div>
-              <div>
-                <p className="font-medium text-sm ">Pengaturan</p>
-                <p className="text-xs ">Kelola akun</p>
+              <div className="flex-1 min-w-0">
+                <p className="font-medium text-sm">Pengaturan</p>
+                <p className="text-xs text-muted-foreground">Kelola akun</p>
               </div>
             </CardContent>
           </Card>
         </Link>
-      </div>
-    </div>
-  );
-}
-
-function DashboardSkeleton() {
-  return (
-    <div className="space-y-8">
-      <div className="flex justify-between items-center">
-        <div className="space-y-2">
-          <Skeleton className="h-8 w-72" />
-          <Skeleton className="h-4 w-96" />
-        </div>
-        <div className="flex gap-2">
-          <Skeleton className="h-9 w-28" />
-          <Skeleton className="h-9 w-28" />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {[...Array(4)].map((_, i) => (
-          <Skeleton key={i} className="h-24 rounded-xl" />
-        ))}
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Skeleton className="lg:col-span-2 h-[320px] rounded-2xl" />
-        <Skeleton className="h-[320px] rounded-xl" />
-      </div>
-
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {[...Array(4)].map((_, i) => (
-          <Skeleton key={i} className="h-20 rounded-xl" />
-        ))}
       </div>
     </div>
   );
