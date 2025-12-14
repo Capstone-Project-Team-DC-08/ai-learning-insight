@@ -13,7 +13,7 @@ const init = async () => {
     host: process.env.HOST || "localhost",
     routes: {
       cors: {
-        origin: ["https://pacupintar.netlify.app"],
+        origin: ["*"],
         credentials: true,
         headers: ["Content-Type", "Authorization"],
         additionalHeaders: ["Authorization"],
