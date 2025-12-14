@@ -54,9 +54,9 @@ export default function LandingPage() {
   ];
 
   const stats = [
-    { number: "10K+", label: "Active Learners" },
+    { number: "5+", label: "Active Learners" },
     { number: "50+", label: "Courses" },
-    { number: "98%", label: "Completion Rate" },
+    { number: "92%", label: "Completion Rate" },
   ];
 
   return (
