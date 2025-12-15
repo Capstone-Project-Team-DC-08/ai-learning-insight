@@ -19,9 +19,6 @@ Platform EdTech dengan fitur **AI-powered Learning Insights** yang menganalisis 
 - [Environment Variables](#environment-variables)
 - [API Documentation](#api-documentation)
 - [Database Schema](#database-schema)
-- [Machine Learning Models](#machine-learning-models)
-- [Screenshots](#screenshots)
-- [Tim Pengembang](#tim-pengembang)
 
 ## Fitur Utama
 
@@ -47,7 +44,7 @@ Platform EdTech dengan fitur **AI-powered Learning Insights** yang menganalisis 
 ```
 ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
 │                 │     │                 │     │                 │
-│    Frontend     │────▶│    Backend      │────▶│    ML-API       │
+│    Frontend     │───▶│    Backend      │────▶│    ML-API       │
 │   (Next.js)     │     │   (Hapi.js)     │     │   (FastAPI)     │
 │   Port: 3000    │     │   Port: 4000    │     │   Port: 8000    │
 │                 │     │                 │     │                 │
@@ -110,15 +107,15 @@ ai-learning-insight/
 │   └── package.json
 │
 ├── server/                     # Hapi.js Backend
-│   ├── src/
-│   │   ├── api/               # API Routes & Handlers
-│   │   │   ├── auth/          # Authentication
-│   │   │   ├── admin/         # Admin Endpoints
-│   │   │   └── students/      # Student Endpoints
-│   │   ├── services/          # Business Logic
-│   │   │   ├── admin/         # Admin Services
-│   │   │   ├── learning/      # Learning Services
-│   │   │   └── student/       # Student Services (InsightService)
+    ├── src/
+    │   ├── api/               # API Routes & Handlers
+    │   │   ├── auth/          # Authentication
+    │   │   ├── admin/         # Admin Endpoints
+    │   │   └── students/      # Student Endpoints
+    │   ├── services/          # Business Logic
+    │   │   ├── admin/         # Admin Services
+    │   │   ├── learning/      # Learning Services
+    │   │   └── student/       # Student Services (InsightService)
     │   └── server.js          # Server Entry Point
     ├── prisma/
     │   ├── schema.prisma      # Database Schema
